@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APTEST>
+	<Equip>
+		<MAC>00:06:7a:20:26:c9</MAC>
+		<WIFIMAC>04:f0:21:01:3e:a5</WIFIMAC>
+		<HEADING>04:f0:21:01:3e:a5</HEADING>
+		<X>0</X>
+		<Y>0</Y>
+		<IP>192.168.0.163</IP>
+		<LINKM>1000</LINKM>
+	</Equip>
+</APTEST>

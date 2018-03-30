@@ -1,0 +1,16 @@
+[web_ap_port]=80
+[web_file_port]=8100
+[web_user_port]=8080
+[db_use_url]=no
+[db_url]=192.168.0.15
+[db_IP]=192.168.0.15
+[db_port]=3306
+[url_of_Conf_75xx]=bootpImage.map7500
+[url_of_Conf_922x]=root_uImage.MAP9220
+[url_of_Conf_77xx]=root_uImage.MAP7700
+[url_of_Conf_50xx]=root_uImage.MAP5010
+[url_of_Conf_20xx]=root_uImage.MAP2010
+[url_of_Conf_920x]=root_uImage.MAP9200
+[url_of_Conf_50xx_mesh]=root_uImage.5000_MESH
+[url_of_Firm]=config.zip
+[debug_level]=0

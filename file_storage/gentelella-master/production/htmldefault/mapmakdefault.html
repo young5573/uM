@@ -1,0 +1,2181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../production/serveraddr.js"></script>
+    <script>
+        //alert(server_url)
+       // var server_url="192.168.0.11"  // www.umanager.kr
+        var ws = new WebSocket("ws://"+server_url+":8100/websocket");
+        var indexmacaddr;
+        var table;
+        array1=indexmacaddr.split(';');
+        array1.pop();
+        var table1=array1.pop();
+        table=table1.substr(6);
+        console.log(table);
+        console.log(array1);
+    </script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" href="./jmpsys_wifi.ico" >
+    <title>uManager 3.3</title>
+  <!--  AIzaSyDB0MGa1Mw-4D5T6W-lmE8jR4EIEeOnQeE "http://maps.google.com/maps/api/js?sensor=false"-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDB0MGa1Mw-4D5T6W-lmE8jR4EIEeOnQeE&language=eng&region=KR"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- 캐쉬 안쌓이게 해보자.... -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <META http-equiv="Expires" content="-1">
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="No-Cache">
+    <!-- 파비콘을 설정한다. png 를 ico로 변환하는 과정이 필요 -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <script src="../vendors/map/infobubble.js"></script>
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 링크 엘리먼트는 웹url이 지정하는 파일을 스타일쉬트와 연결시켜준다
+    즉 CSS 내용을 축적하여 만들어 나가기 위한 것이지 자바스크립트와는 관계가 없다. -->
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.min.css" rel="stylesheet">
+    <style>
+        td{
+            text-align: center;
+        }
+        table.dataTable.select tbody tr,
+        table.dataTable thead th:first-child {
+            cursor: pointer;
+        }
+        .example tr{
+            text-align:center;
+        }
+       #makehidden{
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+<body class="nav-md">
+
+<!--button id="result10">느리게</button>
+<button id="result11">빠르게</button-->
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="index.html"><center> <img src="images/logo.png"style="width:90%;height:90% ;"></center></a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <!-- menu profile quick info -->
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img src="images/jsn270.png" alt="..." class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>Wemcome,</span>
+                        <h2>Manager</h2>
+                    </div>
+                </div>
+                <!-- /menu profile quick info -->
+                <br />
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <h3>JMPSYSTEMS uManager 3.3</h3>
+                        <ul class="nav side-menu">
+                            <li><a><i class="fa fa-area-chart"></i> Basic Management <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href='index.html'>Status</a></li>
+                                    <li><a href='index1.html'>Management</a></li>
+                                    <!--li><a href='index2.html'>AP 관계도</a></li-->
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-archive"></i> Field Management <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a onclick="mapinfo()">Outdoor</a></li>
+                                    <li><a href='indoor.html'>Indoor</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu_section">
+                        <!--h3>개발예정 메뉴</h3-->
+                        <ul class="nav side-menu">
+                            <!--li><a><i class="fa fa-bug"></i> 버그신고 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a target="_blank" href="http://www.jmpsys.com">개발자에게 알리기</a></li>
+                                    <li><a href='#Redirect'>프로젝트 블로그</a></li>
+                                </ul>
+                            </li-->
+                            <li><a target="_blank" href="http://www.jmpsys.com"><i class="fa fa-laptop"></i> Go JMP Site <span class="label label-success pull-right">JMPSYS</span></a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+                <div class="sidebar-footer hidden-small">
+                    <!--a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a-- data-toggle="tooltip" data-placement="top" title="Logout">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a-->
+                </div>
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--li class="">
+                            <a href="javascript:" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <img src="images/jsn270.PNG" alt="">무선 관리자
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="javascript:"> Profile</a></li>
+                                <li>
+                                    <a href="javascript:">
+                                        <span class="badge bg-red pull-right">50%</span>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li><a href="javascript:">Help</a></li>
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li-->
+
+                        <!--  우상단 관리자 아이콘 풀다운 메뉴 꾸미기...
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">6</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="text-center">
+                                        <a>
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">  <!-- 오른쪽 전체를 지칭 -->
+            <!-- 여기까진 모든 젠텔레라 페이지가 똑같다...-->
+
+            <!-- top tiles -->
+            <div class="row tile_count"> <!-- 최상단 카운터들 -->
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Download</span>
+                    <div class="count" id="A00">0</div>  <!-- A00 에 값 대입 -->
+                    <!--span><i class="fa fa-user"></i> Total Download Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Upload</span>
+                    <div class="count"  id="A01">0</div>
+                    <!--i class="fa fa-clock-o"></i> <span>Total Upload Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Trafic</span>
+                    <div class="count green" id="A02" >0</div>
+                    <!--i class="fa fa-user"></i> <span>Real Time Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Service Time</span>
+                    <div class="count" style="font-size:30px" id = "A03" >0</div>
+                    <!--i class="fa fa-clock-o"></i><span> Operation Time</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Operating Rate</span>
+                    <div class="count" id= "A04">0</div>
+                    <i id="A04rate" class="green">34%</i>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Registration Equipment</span>
+                    <div class="count" id= "A05"></div>
+                    <!--i class="fa fa-user"></i> <span>Registration Equipment</span-->
+                </div>
+
+            </div>    <!-- 우측공간 최상단 카운터들 -->
+            <!-- /top tiles -->
+            <hr/>
+
+
+            <!-- 블럭을 shrink 한줄만 copy 해오면 되네.. 블럭을 인식하는건 역시 this is webstorm !!
+            <div class="">  <!-- 우측공간 최상단 카운터 아래쪽 공간 정의 -->
+
+            <div class="page-title">
+                <div class="title_left">
+                    <!-- 파파 아이콘 사용 -->
+                    <h3><i class="fa fa-cogs" aria-hidden="true"></i> Wireless AP Monitoring </i></h3>
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <!--input type="text" class="form-control" placeholder="Search for..."-->
+                            <span class="input-group-btn">
+                                
+                      <button class="btn btn-default" type="button" onclick="top_go_button_click();">Go!</button>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- 테이블 감싸고 제품과 오른쪽 더비 써치 & Go -->
+
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+
+            <div class="row"> <!-- 우측 공간에서 row 하나 만든다. -->
+                <!-- xs < 768 | sm > 768 | md > 992 | lg > 1200
+<div id="show_file" class="col-md-6"
+ 부트스트랩 정의 ::  컨테이너 너비   auto   |   750px  |   970px  |   1170px -->
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel" style="align:center; height:100%">
+                        <div class="x_title">
+                            <h2>Outdoor Management<small></small></h2><div style="float:right"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content" style="align:center;">
+
+                            <div id="map" style="width:100%;height:500px;"></div>
+                            <div>
+                                <input type="hidden"  id="x1" value="">
+                                <input type="hidden" id="y1" value="">
+                                Y: <input  id="x" value="">
+                                X: <input  id="y" value="">
+                                <input type="button" onclick="h()" value="Move">
+                                <!--input type="button" onclick="check()" value="췍"-->
+
+                            </div>
+                            <table id="example" border="1px">
+                                <tr>
+                                    <th width="25%" style="text-align:center" >Y</th>
+                                    <th width="25%" style="text-align:center">X</th>
+                                    <th width="30%" style="text-align:center">MAC</th>
+                                    <th align="center" style="text-align:center;min-width: 200px;max-width:100px;"><img id="makehidden" src="images/wifiimg.png" onclick="m1akehidden()"></img></th>
+                                    <th width="20%" style="text-align:center">IP</th>
+                                    <th></th>
+                                </tr>
+                                <tr class="item1">
+                                    <td></td>
+                                    <td></td>
+                                    <td class="macmac">
+                                        <!-- <select name="job"> <option value="">Mac Addr</option><!-- item n macmac job.innerHTML 해서 쫙쫙쫙-->
+                                    <td><button class ="editmarker" value="123">Create</button><button class ="focus" value="123">Move</button></td>
+                                    <td class="ipip"></td>
+                                    <td><input type="hidden" class="delBtn"></input></td>
+
+                                </tr>
+                            </table> <!--테이브ㅡㄹ블-->
+                            <!--button id="result1">장비 결산</button>
+                            <button id="result2">장비 확인</button-->
+                            <button id="save">Save Status</button>
+
+
+                        </div>
+                    </div>
+                </div> <!-- 체빡 영역 -->
+            </div> <!-- 우측 공간에서 row 하나 만든다. --> <!-- 반응형 체크때문에 남겨둔 코드 -->
+
+        </div>  <!-- 오른쪽 전체 끝 -->
+
+    </div>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+        <div class="pull-right">
+            uManager version 3.3 ----- <a href="http://www.jmpsys.com">JMPSYSTEMS Co., Ltd.</a>
+        </div>
+        <div class="clearfix"></div>
+
+    </footer>
+    <!-- /footer content -->
+
+</div>
+</body>
+
+<!-- Custom Theme Scripts -->
+
+
+<script src="../vendors/jQuery-contextMenu-master/dist/jquery.contextMenu.js"></script>
+<script src="../vendors/jQuery-contextMenu-master/dist/jquery.ui.position.js"></script>
+<script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/mar10/jquery-ui-contextmenu@v1/jquery.ui-contextmenu.min.js"></script>
+<script src="../build/js/custom.min.js"></script>
+<script src="../vendors/d3/d3.min.js"></script>
+<script src="../vendors/DateJS/build/date.js"></script>
+<!-- Custom Theme Scripts -->
+<script>
+    function h(){
+        console.log(document.getElementById("x").value)
+        var wheremap = new google.maps.LatLng(document.getElementById("x").value,document.getElementById("y").value);
+        map.panTo(wheremap);
+    }
+    for(var f=0;f<table;f++) {
+        document.write('<hidden id = "first"  class="base"></hidden>');
+        var rec = "first"+(f);
+        document.getElementById("first").id = rec;
+        var a= document.getElementById(rec);
+        document.getElementById("A05").innerHTML=table;
+        if(array1[f]==null){
+            document.getElementById(rec).className="Loading";
+        }
+    }
+    console.log(table)
+
+</script>
+<!--웹소켓-->
+<script>
+
+
+
+    /*function ws_close(){
+     ws.close();
+     }
+     var checkUnload = true;
+     $(window).on("afterunload", function(){
+     if(checkUnload) return ws_close();
+     });
+     */
+    //var nStart = new Date().getTime(); //html 켜진 시간
+    for(var s=0;s<table;s++){
+        eval("stat"+s+"=new Array();");
+        eval("test_compare"+s+"=new Array();");
+    }
+    //var stat0=new Array();
+    //stat0,stat2.......  총 40개의 배열 생성 여기다가 상태넣을거.
+    var bootstring=[];
+    var macstring=[];
+    var ipstring=[];
+    var comparetime=[];
+    var statusstring=[];
+    var savetime=[];
+    var uploadstring=[];
+    var downstring=[];
+    var upload=[];
+    var download=[];
+    var per_minute = [];
+    var per_minute1 = [];
+    var realtx=[];
+    var realrx=[];
+    var atach=[];
+    var model=[];
+    var websocsend=[];
+
+    var uptotal;
+    var downtotal;
+    var spend_time;
+    var string;
+    var cross=1;
+
+
+    window.onload = function()
+    {
+        get_timer();
+        // Web Socket is connected, send data using send()
+        setTimeout(function(){ws.send("pingmap");}, 100);
+        console.log("핑핑");
+        //var myTextArea = document.getElementById("textarea1");
+        // myTextArea.value = myTextArea.value + "\n" + "First message sent";
+        //textarea1.scrollTop = textarea1.scrollHeight;
+        console.log(table);
+    };
+    ws.onmessage = function (evt)
+    {
+        //console.log(evt.data);
+        spend_time_start=evt.data.lastIndexOf(';');
+        spend_time=evt.data.substr(spend_time_start+2);
+        spend_timeR=spend_time.split("[]");
+        spend_time=spend_timeR[0];
+        ////tttt=spend_timeR[1];
+        //testtest(tttt)
+        //console.log(tttt);
+        string = evt.data.split(';');
+        //바로가면 안되고 특정문자 기준으로 배열로 나눠서 뿌려준다.
+        setTimeout(function(){ws.send("pingmap");}, 100);
+        var err=$('.flag5').length;
+        var notyet=$('.base').length;
+        var und=$('.Loading').length;
+        var wait=$('.flag4').length;
+        work=table-err-notyet-wait-und.toString();
+        total=table-und.toString();
+        document.getElementById("A04").innerHTML=work+" / "+total;
+        if (string!=""&&evt.data.indexOf("table:")==-1) {
+            web_soc_html();
+        }
+    }
+    function web_soc_html(){
+        //console.log(spend_time);//서버 열린 시간(초)
+        var clocks=Math.floor(spend_time%60);
+        var minutes=Math.floor(spend_time/60);
+        var hours=Math.floor(minutes/60);
+        var day=Math.floor(hours/24);
+        /*if(minutes%120==0){ //2시간마다 한번씩 새로고침
+         setTimeout(function() {
+         window.location.reload(true);
+
+         },1000*60*2)
+         }*/
+        var string_time=minutes+"M";
+        if (minutes>59){
+            minutes=minutes%60;
+            string_time=hours+"H "+minutes+"M";
+            if(hours>23)
+            {
+                hours=hours%24;
+                string_time=day+"D "+hours+"H "+minutes+"M";
+            }
+
+        }
+        //console.log(string_time)
+        document.getElementById("A03").innerHTML=string_time;
+        document.getElementById("A03").title=clocks+"Sec";
+        string.splice(string.length - 1, 1);
+        var getstringlength=string.length;
+        for(j=1;j<getstringlength;j++) {
+            string[j] = string[j].substr(1);
+        }
+        //console.log(string); //맥과 부트가 붙어있는 스트링
+        for(i=0;i<getstringlength;i++) {
+            var bootstart=string[i].indexOf("부:");
+            bootstring[i] = string[i].substr(bootstart+2, 1);
+            //console.log(bootstring);
+            var macstart=string[i].indexOf("맥:");
+            macstring[i]=string[i].substr(macstart+2,17);
+            //console.log(macstring);
+            var ipstart=string[i].indexOf("아:");
+            var ipend=string[i].lastIndexOf("컴:");
+            ipstring[i]=string[i].substr(ipstart+2,ipend-ipstart-3);
+            setmactoip( ipstring[i],macstring[i])
+            //console.log(ipstring);
+            var compstart=string[i].indexOf("컴");
+            var compend=string[i].lastIndexOf("상태:");
+            comparetime[i]=string[i].substr(compstart+2,compend-compstart-3);
+            //console.log(comparetime);
+            statusstring[i]=string[i].substr(compend+3); //ap트래픽
+            var upstart=string[i].indexOf("전송:");
+            var upend=string[i].indexOf("수신:");
+            uploadstring[i]=string[i].substr(upstart+4,upend-upstart-6);//사용자가 다운로드
+            var downstart=string[i].indexOf("수신:");
+            var downend=string[i].indexOf("실전:");
+            downstring[i]=string[i].substr(downstart+4,downend-downstart-6);//사용자가 업로드
+            var realtxend=string[i].indexOf("실수:");
+            realtx[i]=string[i].substr(downend+4,realtxend-downend-6)
+            var realrxend=string[i].indexOf("붙맥:");
+            realrx[i]=string[i].substr(realtxend+4,realrxend-realtxend-6)
+
+            var atachstart=string[i].indexOf("모델:");
+            atach[i]=string[i].substr(realrxend+4,atachstart-realrxend-6)
+            var modelend=string[i].indexOf("온도:");
+            model[i]=string[i].substr(atachstart+4,modelend-atachstart-6)
+
+         //  console.log(model[i],atach[i])
+            for(var b=0;b<markers.length;b++){
+                asdf= document.getElementsByClassName("item"+(b+1));
+                gh=asdf[0].cells[2];
+                if (gh.innerHTML==macstring[i]){
+                    console.log(gh.innerHTML)
+                    console.log(model[i])
+                    if (model[i]=="MAP2010"){
+                        markers[b].setIcon(map20)
+                    }else if (model[i]=="MAP5010"){
+                        console.log(b)
+                       markers[b].setIcon(map50)
+                    }else if(model[i].indexOf("MAP92")!=-1){
+                        markers[b].setIcon(map90)
+                    }
+               //     console.log(model[i],"아이콘 셋")
+//여기서 2000이랑 5000 나눠보자
+                }
+            }
+            //makeline1("00:06:7A:40:04:42","00:06:7A:40:02:C7",10,10)
+            //makeline1("00:06:7A:40:04:F1","00:06:7A:40:02:C7",10,10)
+            //makeline1("00:06:7A:40:02:BD","00:06:7A:40:02:C7",10,10)
+            //makeline1("00:06:7A:40:04:D8","00:06:7A:40:02:C7",10,10)
+            //makeline1("00:06:7A:40:02:C7","00:06:7A:05:03:8F",10,10)
+            var asdef=calcuspeed(realtx[i]);
+            var ghif=calcuspeed(realrx[i]);
+            //console.log(realtx[i],realrx[i],"////////////////");
+            //  console.log(asdef,ghif,"////////////////");
+            if(indexmacaddr.indexOf(macstring[i])!=-1){
+                makeline1(macstring[i],atach[i],ghif,asdef)
+            }
+            console.log(model[i],macstring[i],"가",atach[i],"에 붙음.")
+/*
+            if (model[i].indexOf("MAP50")!=-1&&atach[i]!="0"){
+
+               var asdef=calcuspeed(realtx[i]);
+                var ghif=calcuspeed(realrx[i]);
+                //console.log(realtx[i],realrx[i],"////////////////");
+              //  console.log(asdef,ghif,"////////////////");
+                if(indexmacaddr.indexOf(macstring[i])!=-1){
+                    makeline1(macstring[i],atach[i],ghif,asdef)
+                }
+              //  console.log(realtx[i],realrx[i])
+            }else if(model[i].indexOf("MAP20")!=-1&&atach[i]!="0"){
+                var asdef=calcuspeed(realtx[i]);
+                var ghif=calcuspeed(realrx[i]);
+                //console.log(realtx[i],realrx[i],"////////////////");
+                //  console.log(asdef,ghif,"////////////////");
+                if(indexmacaddr.indexOf(macstring[i])!=-1){
+                    makeline1(macstring[i],atach[i],ghif,asdef)
+                }
+            }*/
+
+            //console.log(downstring);
+            //console.log(statusstring)
+        }
+        //var nend = new Date().getTime();
+        //var spendtime=(nend-nStart)/1000;
+        //console.log(spendtime);
+        //alert(macstring.indexOf(array1[0])) //그 맥에해당하는 위치를 알려준다.
+        for(i=0;i<getstringlength;i++){
+            var inputhere="<h4> "+macstring[i]+" </h4>"+"\n"+"<h5>&nbsp"+ipstring[i]+"&nbsp\n"+"</h5>";
+            // console.log(inputhere);
+            for(j=0;j<table;j++){
+                if(macstring[i]==array1[j]){
+                    upload[j]=uploadstring[i];
+                    download[j]=downstring[i];
+                    //alert(i); 소켓에서 오는 배열 번호
+                    //alert(j); 그에 일치하는 화면 배열 번호
+                    savetime[j]=comparetime[i];
+                    eval("var pus=stat"+j);
+                    pus.unshift("\n"+statusstring[i]);
+                    if(pus.length>10){
+                        pus.pop();
+                    }
+
+                    if(bootstring[i]=="0"){
+
+                        document.getElementById('first'+(j)).className="flag0";
+                        document.getElementById("first"+(j)).title=pus;
+                        // alert("색바뀐당");
+                    }
+                    else if(bootstring[i]=="1"){
+                        document.getElementById('first'+(j)).className="flag1";
+                        bootnow(macstring[i]);
+                        document.getElementById('first'+(j)).title="플래그1";
+                    }
+                    else if(bootstring[i]=="2"){
+                        document.getElementById('first'+(j)).className="flag2";
+                        document.getElementById('first'+(j)).title="플래그2";
+                    }
+                    else if(bootstring[i]=="3"){
+                        document.getElementById('first'+(j)).className="flag3";
+                        document.getElementById('first'+(j)).title="플래그3";
+                    }
+                    else if(bootstring[i]=="4"){
+                        document.getElementById('first'+(j)).className="flag4";
+                        document.getElementById('first'+(j)).title="플래그4";
+                    }
+                }
+            }
+            uptotal=0;
+            downtotal=0;
+            for(j=0;j<table;j++){
+                if(upload[j]!=null) {
+                    uptotal += Number(upload[j]);
+                    downtotal+=Number(download[j]);
+                }
+            }
+        } //화면과 같은 맥과 부트 배열 위치 찾기
+
+        var cutup=String(uptotal);
+        var cutdown=String(downtotal);
+        var cutup1=uptotal;
+        var cutdown1=downtotal;
+        if (cutup1>1023){
+            cutup1=(cutup/1024).toFixed(1);
+            cutup=cutup1+"K"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"M"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"G"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"T"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown/1024).toFixed(1);
+            cutdown=cutdown1+"K"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"M"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"G"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"T"
+        }
+        /* if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"K"
+         cutup=cutup.substring(0,cutup.length-3)
+         console.log(cutup)
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"M"
+         cutup=cutup.substring(0,cutup.length-4);
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"G"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"T"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutdown.length>4){
+         cutdown=cutdown.substring(0,cutdown.length-3)+"K";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"M";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"G";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"T";
+         }*/
+        //부트플래그 넣어보자
+        var err=$('.flag5').length;
+        var notyet=$('.base').length;
+        var und=$('.Loading').length;
+        var oprate=Math.floor((table-err-notyet-und)*100/(table-und));
+        document.getElementById("A04rate").innerHTML=oprate+"%";
+        document.getElementById("A00").innerHTML=cutup;
+        document.getElementById("A00").title=AddComma(String(uptotal))+"byte";
+        document.getElementById("A01").innerHTML=cutdown;
+        document.getElementById("A01").title=AddComma(String(downtotal))+"byte";
+        var work=table-err-notyet-und.toString();
+        var total=table-und.toString();
+        document.getElementById("A04").innerHTML=work+" / "+total;
+    }
+    function CenterControl1(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlUI.id='realTimer';
+        controlUI.style.backgroundColor = 'rgba( 255, 255, 255, 0.5 )'
+        //controlUI.style.opacity = '0.1';
+        controlUI.style.fontSize='200%'
+        controlUI.style.color='black'
+        controlUI.style.border = '2px solid #fff';
+        controlUI.style.borderRadius = '3px';
+        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+        controlUI.style.cursor = 'pointer';
+        controlUI.style.marginBottom = '22px';
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('input');
+       controlText.type = 'hidden';
+    
+        controlUI.appendChild(controlText);
+        // <input type="range" id="slider_range"class="slider_range" title='배속 X1' value="10" min="1" align="float:right"max="100"style=" width:100%; height:50px;">
+
+
+        // Setup the click event listeners: simply set the map to Chicago.
+
+    }
+    function check(){
+
+        var ipsplit="<td class=\"ipip\">";
+        var backarray=""
+        var c=0;
+       console.log(document.getElementById("example").innerHTML)
+        var a=document.getElementById("example").innerHTML
+        document.getElementById("example").innerHTML=a;
+        var sortarray=document.getElementById("example").innerHTML.split("<\/tr>")
+       // console.log(sortarray[0]+"<\/tr>\n")
+       // console.log(sortarray[0])
+       // console.log(document.getElementById("example").innerHTML)
+        var infinityarray=sortarray[0]+"<\/tr>"
+        for(i=1;i<(table*1)+1;i++){
+            infinityarray+=sortarray[i]+"<\/tr>"
+          // console.log(sortarray[i]+"<\/tr>\n")
+         /*  if (sortarray[i].split(ipsplit)[1].split("<\/td>")[0]!=""){
+               infinityarray+=sortarray[i]
+            }else{
+                backarray+=sortarray[i]
+            }*/
+        }
+        infinityarray+=sortarray[(table*1)+1]+""
+     //   console.log(sortarray[(table*1)+1]+"<\/tr><\/tbody>\n")
+
+        console.log("111111")
+          console.log(infinityarray)
+       // document.getElementById("example").innerHTML=infinityarray+"<\/tr><\/tbody>"
+      // console.log("splits[p")
+      //  console.log(document.getElementById("example").innerHTML)
+       // alert(c)
+    }
+    function setmactoip(ip,mac){
+    //    console.log(ip,mac)
+        for(var a=0;a<savedmacaddrs.length;a++){
+
+            asdf= document.getElementsByClassName("item"+(a+1));
+            gh=asdf[0].cells[2];
+            jk=asdf[0].cells[4]
+            if(gh.innerHTML==mac){
+                jk.innerHTML="<td class='parseip'>"+ip+"<\/td>";
+            }
+        }
+
+    }
+    function CenterControl(controlDiv, map) {
+        // Set CSS for the control border.
+        var controlUI = document.createElement('div');
+        controlDiv.appendChild(controlUI);
+
+        // Set CSS for the control interior.
+        var controlText = document.createElement('input');
+        controlText.type ='range';
+        controlText.id ='slider_range';
+        controlText.class = 'slider_range';
+        controlText.title= '배속 X1';
+        controlText.min='1';
+        controlText.max='100';
+        controlText.value='10';
+        controlUI.appendChild(controlText);
+   // <input type="range" id="slider_range"class="slider_range" title='배속 X1' value="10" min="1" align="float:right"max="100"style=" width:100%; height:50px;">
+        controlUI.addEventListener('click', function() {
+            asd=document.getElementById("slider_range");
+            cross=asd.value/10;
+            asd.title="배속 X"+cross
+        });
+        controlUI.addEventListener('mouseup', function() {
+            asd=document.getElementById("slider_range");
+            cross=asd.value/10;
+            asd.title="배속 X"+cross
+        });
+
+        // Setup the click event listeners: simply set the map to Chicago.
+
+    }
+    function  calcuspeed(a){
+        var speed1;
+        if (a<500000){ //1메가
+            speed1=0.5
+        }else if(a<1000000){ //1메가
+            speed1=1
+        }else if(a<2000000){ //2메가
+            speed1=1.5
+        }else if(a<10000000){ //3메가
+            speed1=2
+        }else if(a<20000000){
+            speed1=2.5
+        }else if(a<50000000){
+            speed1=3
+        }else{
+            speed1=4
+        }
+        //console.log(a)
+        return speed1
+    }
+    var line1 = new google.maps.Polyline({});
+    var line2 = new google.maps.Polyline({});
+    function AddComma(data_value) {
+        return Number(data_value).toLocaleString('en');
+    }
+    setInterval(function() {
+        if (uptotal != null) {
+            per_minute.unshift(uptotal+downtotal);
+            if (per_minute.length > 15) {
+                per_minute.pop();
+            }
+            //console.log(per_minute)
+            per_minute1.unshift(downtotal);
+            if (per_minute1.length > 15) {
+                per_minute1.pop();
+            }
+            //console.log(per_minute1);
+
+            if (per_minute.length > 10) {
+                var minute = (per_minute[0] - per_minute[9])/10;
+                minute=Math.ceil(minute);
+                minute1=minute+"B";
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"K";
+                }
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"M";
+                }
+                if (minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"G"
+                }
+                if (minute<0){}else{
+                    document.getElementById("A02").innerHTML = minute1;
+                }
+                document.getElementById("A02").style="cursor:default";
+                //console.log(per_minute, minute);
+            }
+            else {
+                document.getElementById("A02").innerHTML = "Loading...";
+                document.getElementById("A02").style="cursor:wait";
+            }
+        }
+    },1000);
+
+    setTimeout(function(){
+        setInterval(function(){
+            for(i=0;i<table;i++) {
+                eval("var pus=test_compare"+i)
+                pus.push(savetime[i]);
+                start_pus=pus.indexOf();
+                last_pus=pus.lastIndexOf(!null);
+                // console.log(pus,start_pus,last_pus,i);
+                if(pus[0]==pus[1]){
+                    if(document.getElementById('first'+(i)).className!="Loading") {
+                        document.getElementById('first' + (i)).className = "flag5";
+                        document.getElementById('first'+(i)).title="No response From Ap";
+                        websocsend.push(" "+array1[i]);
+                        errmarker(array1[i])
+                        //var asdfeg=array1[i];
+                        //ws.send(asdfeg)
+
+
+                    }
+                }
+
+                if(pus.length>2){
+                    pus.shift();
+                }
+            }
+            console.log(websocsend);
+            send_soc();
+            console.log(websocsend);
+        },1000*30); //5분
+
+    },30000);
+
+    function AddComma(data_value) {
+        return Number(data_value).toLocaleString('en');
+    }
+
+    function send_soc(){
+        setTimeout(function(){ws.send("errmac "+websocsend);}, 100);
+        setTimeout(function(){ websocsend=[];}, 1000*2);
+    }
+
+    /*
+     setInterval(function(){
+     window.location.reload(true);
+     },1000*60*60*1); //1시간마다 한번씩 리프레쉬
+     */
+
+    /* 장비가 죽었는지 확인하는 방법 1)
+     setInterval(function(){
+     for(i=0;i<table;i++)
+     savetime1[i]=savetime[i];
+     console.log(savetime1,"CCCCC"); //N초마다 savetime1에 저장.
+     setTimeout(function() {
+     for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     if(document.getElementById('first'+(i)).className!="Loading") {
+     document.getElementById('first' + (i)).className = "flag5";
+     }
+     }
+     }
+     console.log(savetime1,"AAAAAAAA");
+     console.log(savetime,"BBBBBBBB");
+     }, 1000*60*2);
+     },1000*60*10);
+
+     */
+
+
+    /*for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     document.getElementById('first'+(i)).className="flag5";
+     }
+     }
+     console.log(savetime1);
+     console.log(savetime);*/
+
+
+
+</script>
+<script type="text/javascript">
+    var tablenum=1;
+    $(document).ready(function(){
+        $('.slider_range').change(function() {
+            alert( this.value );
+        });
+        //makeline();
+        // 옵션추가 버튼 클릭시
+        // console.log(markers.length)
+        for(var a=0;a<savedmacaddrs.length;a++){
+            var lastItemNo = $("#example tr:last").attr("class").replace("item", "");
+            var newitem = $("#example tr:eq(1)").clone();
+            newitem.removeClass();
+            newitem.find("td:eq(0)").attr("rowspan", "1");
+            newitem.addClass("item"+(parseInt(lastItemNo)+1));
+            var tableclass="item"+(parseInt(lastItemNo)+1);
+            $("#example").append(newitem);
+            //console.log(tableclass)
+            //console.log("item"+(a+1));
+            asdf= document.getElementsByClassName("item"+(a+1));
+            as=asdf[0].cells[0];
+            df=asdf[0].cells[1] ;
+            gh=asdf[0].cells[2];
+            gh.innerHTML=savedmacaddrs[a];
+            var aaa="tr.item"+(a+1)+" button.makemark";
+            console.log(as.innerHTML);
+            $(aaa).html("Create");
+            if(isNaN(markers[a].position.lat())!=true){
+                as.innerHTML=markers[a].position.lat();
+                df.innerHTML=markers[a].position.lng();
+                console.log(markers[a].position.lat(),markers[a].position.lng());
+                var aaa="tr.item"+(a+1)+" button.editmarker";
+                console.log(as);
+                $(aaa).html("Del");
+            }else{
+                as.innerHTML="";
+                df.innerHTML=""
+            }
+            console.log("item"+(a+1));
+            console.log(isNaN(markers[a].position.lat()));
+            if(as!=""){
+                console.log(as);
+                console.log($(aaa).attr("class","editmarker"));
+            }
+            tablenum++;
+            if(isNaN(markers[a].position.lat())==true){
+                var aaa="tr.item"+(a+1)+" button.editmarker"
+                console.log(aaa);
+                $(aaa).html("Add");
+                console.log($(aaa).attr("class","makemark"));
+            }
+        }
+        console.log(a);
+        locations[a]=[];
+        locations[a][3]=0;
+        asdf= document.getElementsByClassName("item"+(a+1));
+        as=asdf[0].cells[0];
+        df=asdf[0].cells[1];
+        gh=asdf[0].cells[2];
+        hj=asdf[0].cells[3];
+        as.innerHTML="Y";
+        df.innerHTML="X";
+        gh.innerHTML="MAC";
+        hj.innerHTML="";
+        locations.pop();
+        $("#result1").click(function(){
+            console.log(markers.length);
+            for (var b=0;b<markers.length;b++){
+                //console.log(markers[b]);
+                //console.log(markers[b].position.lat(),markers[b].position.lng())
+            }
+            makeline1("00:06:7A:05:03:8F","00:06:7A:05:03:92",1,1); //A-- B-- A에서 B로 가는속도-- B에서 A로 가는 속도
+
+           // makeline1("00:06:7A:40:04:D8","00:06:7A:0C:33:4B");
+            //makeline1("12:31:23:12:24","12:31:23:12:23");
+            var vertices = line.getPath();
+            var contentString = "<b>Bermuda Triangle Polygon</b><br />";
+            //contentString += "Clicked Location: <br />" + event.latLng.lat() + "," + event.latLng.lng() + "<br />";
+            // Iterate over the vertices.
+            for (var i =0; i < vertices.length; i++) {
+                var xy = vertices.getAt(i);
+                contentString += "<br />" + "Coordinate: " + i + "<br />" + xy.lat() +"," + xy.lng();
+                console.log(xy.lat(),xy.lng())
+            }
+            console.log(locations)
+
+        });
+        $("#result2").click(function(){
+            makeline1("00:06:7A:0C:33:4B","00:06:7A:40:03:ED");
+            // makeline1("12:31:23:12:23","12:31:23:12:26");
+        });
+        $("#save").click(function(){
+
+            console.log(locations);
+            console.log(savedmacaddrs);
+            // alert(savedmacaddrs);
+            var sendlo="";
+            for(var i in locations){
+                if((typeof locations[i][1]=="undefined")){
+                    locations[i][1]="";
+                    locations[i][2]="";
+                }
+                sendlo+="['"+locations[i][0]+"',"+locations[i][1]+","+locations[i][2]+","+locations[i][3]+"],";
+            }
+            sendlo="["+sendlo+"];";
+            console.log(locations);
+            console.log(sendlo)
+            setTimeout(function(){ showopen=window.open("http://" + server_url + ":8080/umap?location="+sendlo+"&macAddr="+savedmacaddrs,"1","width=480,height=600,toolbar=no,location=no,status=no,left=250,top=" + i*24); setTimeout(function(){ showopen.close();mapinfo();}, 1000);}, 500);
+
+           // window.open("http://" + server_url + ":8080/umap?location="+sendlo+"&macAddr="+savedmacaddrs,"1","width=480,height=600,toolbar=no,location=no,status=no,left=250,top=" + i*24);
+        });
+       /* $("#addItemBtn").click(function(){
+            tablename="item"+tablenum;
+            console.log(tablename);
+            asdf= document.getElementsByClassName(tablename);
+            console.log(asdf);
+            as=asdf[0].cells[0];
+            console.log(fill=as.innerHTML);
+            if(fill.length<10){
+            }else{
+                asd=$("tr.item1 button.makemark").html("수정");
+                console.log();
+                console.log(asd="수정");
+                // item 의 최대번호 구하기
+                var lastItemNo = $("#example tr:last").attr("class").replace("item", "");
+                var newitem = $("#example tr:eq(1)").clone();
+                newitem.removeClass();
+                newitem.find("td:eq(0)").attr("rowspan", "1");
+                // newitem.addClass("item"+(parseInt(lastItemNo)+1));
+                newitem.addClass("item"+(parseInt(tablenum)+1));
+                console.log("item"+(tablenum+1));
+                $("#example").append(newitem);
+                makeditem="item"+(parseInt(tablenum)+1);
+                makedtable=document.getElementsByClassName(makeditem);
+                console.log(makedtable)
+                makedtable[0].cells[0].innerHTML="";
+                makedtable[0].cells[1].innerHTML="";
+                console.log(makedtable[0].cells[2].innerHTML="");
+                var aaa="tr."+"item"+(tablenum+1)+" button.editmarker"
+                console.log(aaa);
+                $(aaa).html("추가");
+                console.log(tablenum);
+                locations[tablenum]=new Array();
+                locations[tablenum][3]=0;
+                console.log($(aaa).attr("class","makemark"));
+                tablenum++
+            }
+        });*/
+        $(".editmarker").on("click",function(){
+            for(adf=0;adf<markers.length;adf++){
+                markers[adf].setIcon(wifiicon);
+            }
+            console.log("aaaaaaaaaaaaaaaa");
+            var clickedRow = $(this).parent().parent();
+            var clc=$(this).parent().parent().children();
+            var cls = clickedRow.attr("class");
+            console.log(cls);
+            order=cls.split("item");
+            asdf= document.getElementsByClassName(cls);
+            gh=asdf[0].cells[2];
+            macmac=document.getElementsByClassName(cls);
+            macmac1=macmac[0].cells[0].innerHTML;
+            macmac2=macmac[0].cells[1].innerHTML;
+            console.log(macmac);
+            var wheremap = new google.maps.LatLng(macmac1,macmac2);
+            map.panTo(wheremap);
+            order=cls.split("item");
+            //console.log(order[1]-1)
+            a=confirm("Remove Yes?");
+            if(a){
+                locations[order[1]-1][1]="";
+                locations[order[1]-1][2]="";
+                var sendlo="";
+                for(var i in locations){
+                    if((typeof locations[i][1]=="undefined")){
+                        locations[i][1]="";
+                        locations[i][2]="";
+                    }
+                    sendlo+="['"+locations[i][0]+"',"+locations[i][1]+","+locations[i][2]+","+locations[i][3]+"],";
+                }
+                sendlo="["+sendlo+"];";
+                console.log(locations);
+                console.log(sendlo)
+                setTimeout(function(){ showopen=window.open("http://" + server_url + ":8080/umap?location="+sendlo+"&macAddr="+savedmacaddrs,"1","width=480,height=600,toolbar=no,location=no,status=no,left=250,top=" + i*24); setTimeout(function(){ showopen.close();mapinfo();}, 1000);}, 500);
+
+            }else{
+                alert("Cancled")
+            }
+            /*aka=prompt("정보 입력 (<br> 입력시 한 줄 띄움) "+array1[order[1]-1],locations[order[1]-1][0]);
+            if(aka!=null){
+                locations[order[1]-1][0]=aka;
+            }*/
+            //markers[order[1]-1].setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png')
+        });
+        $(".focus").on("click",function(){
+            for(adf=0;adf<markers.length;adf++){
+                markers[adf].setIcon(wifiicon);
+                console.log(model[adf],"아이콘 셋")
+                markers[adf].setAnimation(null);
+            }
+            console.log("aaaaaaaaaaaaaaaa");
+            var clickedRow = $(this).parent().parent();
+            var clc=$(this).parent().parent().children();
+            var cls = clickedRow.attr("class");
+            console.log(cls);
+            order=cls.split("item");
+            asdf= document.getElementsByClassName(cls);
+            gh=asdf[0].cells[2];
+            macmac=document.getElementsByClassName(cls);
+            macmac1=macmac[0].cells[0].innerHTML;
+            macmac2=macmac[0].cells[1].innerHTML;
+            console.log(macmac);
+            var wheremap = new google.maps.LatLng(macmac1,macmac2);
+            map.panTo(wheremap);
+            order=cls.split("item");
+            //console.log(order[1]-1)
+            //markers[order[1]-1].setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png')
+            markers[order[1]-1].setAnimation(google.maps.Animation.BOUNCE);
+        });
+       $(".makemark").click(function(){ //북마크
+            var clickedRow = $(this).parent().parent();
+            var clc=$(this).parent().parent().children();
+            var cls = clickedRow.attr("class");
+            console.log(cls);
+            var value = $(cls).val();
+            //console.log(cls);
+            asdf= document.getElementsByClassName(cls);
+          //  console.log(asdf[0].cells[0]);
+            as=asdf[0].cells[0];
+            df=asdf[0].cells[1];
+            jk=asdf[0].cells[3];
+            console.log(jk);
+            //console.log(as,df);
+//sendlo+="['"+locations[i][0]+"',"+locations[i][1]+","+locations[i][2]+","+locations[i][3]+"],";
+               console.log(as);
+               order=cls.split("item");
+               var bbb="tr.item"+order[1]+" button"
+               if($(bbb).html()=="Del"){
+                   for(adf=0;adf<markers.length;adf++){
+                       markers[adf].setIcon(symbolOne)
+                   }
+                   var clickedRow = $(this).parent().parent();
+                   var clc=$(this).parent().parent().children();
+                   var cls = clickedRow.attr("class");
+                   console.log(cls);
+                   order=cls.split("item");
+                   macmac1=markers[order[1]-1].position.lat();
+                   macmac2=markers[order[1]-1].position.lng();
+                   var wheremap = new google.maps.LatLng(macmac1,macmac2);
+                   map.panTo(wheremap);
+                   order=cls.split("item");
+                   //console.log(order[1]-1)
+                   markers[order[1]-1].setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png')
+
+               }else if(document.getElementById("x").value!=""){
+                   as.innerHTML=document.getElementById("x").value;
+                   df.innerHTML=document.getElementById("y").value;
+                   // console.log(as,df);
+                   order=cls.split("item");
+                   var aaa="tr.item"+order[1]+" button.makemark"
+                   var bbb="tr.item"+order[1]+" button"
+                   console.log($(bbb).attr("class","eee"))
+                   console.log($(bbb))
+                   var class_by_name = $(bbb).attr('class');
+                   console.log(class_by_name)
+                   console.log($(bbb).html())
+                   $(bbb).html("");
+                   placeMarker(cls);
+                   console.log(cls)
+            }
+
+        });
+
+        $(".macmac").on("dblclick",function(){
+
+            var clickedRow = $(this).parent();
+            var clc=$(this).parent().parent().children();
+            var cls = clickedRow.attr("class");
+            console.log(cls)
+        });
+
+        function placeMarker(cls) {
+            console.log(markers);
+            var seoul=new google.maps.LatLng(37.541420, 126.991610);
+            //console.log(seoul.lat())
+            gh=document.getElementsByClassName(cls);
+            order=cls.split("item");
+            gh=gh[0].cells[2];
+            lox=document.getElementById("x").value;
+            loy=document.getElementById("y").value;
+            var infowindow = new  InfoBubble({
+
+            });
+            console.log(locations,"as;dkqw;elkqw;lek")
+            x=as.innerHTML;
+            y=df.innerHTML;
+           // console.log(order[1]);
+            locations[order[1]-1][1]=lox;
+            locations[order[1]-1][2]=loy;
+            locations[order[1]-1][3]=1;
+            console.log(lox,loy)
+            //console.log(markers[order[1]-1].position.lat());
+            // markers[order[1]-1].position.lng()=y;
+            //console.log(x,y);
+            console.log(locations);
+            var marker11 = new google.maps.Marker({
+                position: new google.maps.LatLng(x, y),
+                map: map,
+                draggable:true,
+                animation:google.maps.Animation.SHADOW,
+                icon:symbolOne
+            });
+          //  console.log(markers.length);
+            if(gh.innerHTML!=""){
+                markers[order[1]-1]=marker11
+            }else if(x!=""){
+                console.log(gh.innerHTML);
+                markers.push(marker11);
+            }else{
+                alert("위치를 먼저 찍어주세요.")
+            }
+            google.maps.event.addListener(marker11,'mouseover',(function(event){
+                //console.log(event.latLng)
+                document.getElementById("x1").value=event.latLng.lat();
+                document.getElementById("y1").value=event.latLng.lng();
+
+                for(var a=0;a<markers.length;a++){
+                    if(markers[a]==marker11){
+                        infowindow.setContent(locations[a][0]);
+                        infowindow.open(map, markers[a]);
+                        console.log(infowindow.get('bordercolor'));
+                        // console.log(a)
+                        asdf= document.getElementsByClassName("item"+(a+1));
+                        //console.log("item"+(a+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1];
+                        gh=asdf[0].cells[2];
+                        as.innerHTML=markers[a].position.lat();
+                        df.innerHTML=markers[a].position.lng();
+                        locations[a][1]=markers[a].position.lat();
+                        locations[a][2]=markers[a].position.lng();
+                    }
+                }
+                //if (lineex==true)
+                    //makeline(gh.innerHTML);
+            }));
+            google.maps.event.addListener(marker11,'mouseout',(function(event){
+                for(var a=0;a<markers.length;a++){
+                    if(markers[a]==marker11){
+                        asdf= document.getElementsByClassName("item"+(a+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1] ;
+                        as.innerHTML=markers[a].position.lat();
+                        df.innerHTML=markers[a].position.lng();
+                        locations[a][1]=markers[a].position.lat();
+                        locations[a][2]=markers[a].position.lng();
+                    }
+                }
+                infowindow.close();
+            }));
+            google.maps.event.addListener(marker11,'dblclick',(function(){
+                infoset=prompt("정보 입력 (<br> 입력시 한 줄 띄움)");
+                // console.log(infoset.length);
+                if (infoset!=null&&infoset.length>2){
+                    for(var a=0;a<markers.length;a++){
+                        if(markers[a]==marker11){
+                            locations[a][0]=infoset;
+                        }
+                    }
+                }
+            }));
+
+            google.maps.event.addListener(marker11,'mouseup',(function(event){
+                for(var a=0;a<markers.length;a++){
+                    if(markers[a]==marker11){
+                        asdf= document.getElementsByClassName("item"+(a+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1];
+                        gh=asdf[0].cells[2];
+                        as.innerHTML=markers[a].position.lat();
+                        df.innerHTML=markers[a].position.lng();
+                        locations[a][1]=markers[a].position.lat();
+                        locations[a][2]=markers[a].position.lng();
+                    }
+                }
+                if (lineex==true)
+                    makeline(gh.innerHTML);
+            }));
+        }
+        // 항목추가 버튼 클릭시
+        // 삭제버튼 클릭시
+        $(".delBtn").on("click", function(){
+            console.log(markers.length);
+            var clickedRow = $(this).parent().parent();
+            // console.log(clickedRow)
+            var cls = clickedRow.attr("class");
+            console.log(cls);
+            //var trNum = $(this).closest('tr').prevAll().length;
+            order=cls.split("item");
+            console.log(order[1]);
+            //console.log(markers[0])
+            console.log(markers[order[1]-1]);
+            markers[order[1]-1].setMap(null);
+            locations[order[1]-1][3]=0;
+            //console.log('trNum : ' + trNum);
+            // 각 항목의 첫번째 row를 삭제한 경우 다음 row에 td 하나를 추가해 준다.
+            if( clickedRow.find("td:eq(0)").attr("rowspan") ){
+                if( clickedRow.next().hasClass(cls) ){
+                    clickedRow.next().prepend(clickedRow.find("td:eq(0)"));
+                }
+            }
+            $(".addBtn").on("click", function(){
+                var clickedRow = $(this).parent().parent();
+                var cls = clickedRow.attr("class");
+                // tr 복사해서 마지막에 추가
+                var newrow = clickedRow.clone();
+                newrow.find("td:eq(0)").remove();
+                newrow.insertAfter($("#example ."+cls+":last"));
+                // rowspan 조정
+                resizeRowspan(cls);
+            });
+            //clickedRow.remove();
+            // rowspan 조정
+            //  resizeRowspan(cls);
+        });
+
+        /*
+         // Create the polyline and add the symbol via the 'icons' property.
+         var line = new google.maps.Polyline({
+         path: [{lat: 37, lng: 127.1}, {lat:37, lng:127.3}],
+         icons: [{
+         icon: lineSymbol,
+         offset: '100%'
+         }],
+         map: map
+         });
+         var vertices = line.getPath();
+         var contentString = "<b>Bermuda Triangle Polygon</b><br />";
+         //contentString += "Clicked Location: <br />" + event.latLng.lat() + "," + event.latLng.lng() + "<br />";
+         // Iterate over the vertices.
+         for (var i =0; i < vertices.length; i++) {
+         var xy = vertices.getAt(i);
+         contentString += "<br />" + "Coordinate: " + i + "<br />" + xy.lat() +"," + xy.lng();
+         console.log(xy.lat(),xy.lng())
+         }
+         console.log(xy.lat()="1");
+         */
+        // cls : rowspan 을 조정할 class ex) item1, item2, ...
+    });
+
+
+
+</script>
+<!--<button id="addItemBtn">장비 추가</button>-->
+
+<script type="text/javascript">
+    /*var symbolOne = {
+        path: 'M -2,0 0,-2 2,0 0,2 z',
+        strokeColor: '#F00',
+        fillOpacity: 0.2,
+        strokeOpacity: 0.2,
+        scale:5,
+        size:100
+    };*/
+    //var symbolOne = '캡처.PNG'
+    var alertmark='images/alert.png';//이건 경고 이미지
+    var wifiicon='images/wifiimg.png';
+    var bootnowicon="images/wifiimg.png";
+    var map50="images/map5000.png";
+    var map20="images/map2000.png";
+    var map90="images/bootnow.png"
+    //wifiicon.style.opacity='0.2'
+
+    var lineSymbol = { //이건 그냥 점선
+        //path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        path: 'M0.5 0,0.5 -5,2 -3, 1 -3, 1 0 z',
+        strokeColor: '#F00',
+        fillColor:'#F00',
+        fillOpacity: 0.2,
+        strokeOpacity: 0.5,
+        scale: 4,
+    };
+    var symbolOne='images/wifiimg.png'
+    var lineSymbol2 = {
+       // path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+        path: 'M-0.5 0,-0.5 5,-2 3, -1 3, -1 0 z',
+        strokeColor: '#003399',
+        fillColor:'#003399',
+        fillOpacity: 0.2,
+        strokeOpacity: 0.5,
+        scale: 4,
+    };
+
+    var lineSymbol1 = { //이건 마커모양
+        //path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            path: 'M -2,0 0,-2 2,0 0,2 z',
+        strokeColor: '#FF0000',
+        strokeColor: '#F00',
+        fillOpacity: 0.2,
+        strokeOpacity: 1,
+        scale: 4
+        //strokeOpacity: 0.5, //도형 투명도
+    };
+    var as;
+    var df;
+    var lox;
+    var loy;
+    var markers=[];
+    var line;
+    var lines=[];
+    var lines1=[];// rxtx 나눌 라인
+    var lineex=false;
+    var conmac=new Object();
+    var conmac1=new Object();
+    var conmac2=new Object();
+    var makenewline=new Object();
+    var ibOptions = {
+        boxStyle:{
+            padding: 0,
+            backgroundColor: 'rgb(57,57,57)'
+        }
+    };
+var savedmacaddrs=""
+var locations;
+    if(typeof locations[0][1]=="undefined"){
+        a=37.586528;
+        b=126.974777;
+        c=10;
+    }else{
+        a=locations[0][1];
+        b=locations[0][2];
+        c=19
+    }
+    console.log(a,b)
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: c,
+        center: new google.maps.LatLng( a, b),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        fullscreenControl: true,
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP
+        },
+        disableDefaultUI: true
+    });
+    var centerControlDiv = document.createElement('div');
+    var centerControlDiv1 = document.createElement('div');
+    new CenterControl(centerControlDiv, map);
+    new CenterControl1(centerControlDiv1,map)
+
+    centerControlDiv.index = 1;
+    centerControlDiv1.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(centerControlDiv1);
+    var infowindow = new  InfoBubble({
+        minWidth: '100%',
+        minHeight:'100%',
+        shadowStyle: 1,
+        padding: 0,
+        borderRadius: 4,
+        arrowSize: 10,
+        borderWidth: 1,
+        disableAutoPan: true,
+        hideCloseButton: true,
+        arrowPosition: 30,
+        arrowStyle: 2,
+
+    });
+    var marker, i;
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map,
+            draggable:true,
+           icon:wifiicon,
+
+        });
+        markers.push(marker);
+        google.maps.event.addListener(marker, 'mouseover', (function(event,marker, i) {
+            return function() {
+                for(var a=0;a<markers.length;a++){
+                    if(markers[a]==marker){
+                        // console.log(a)
+                       // console.log(infowindow);
+                        asdf= document.getElementsByClassName("item"+(a+1));
+                       // console.log("item"+(a+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1];
+                        gh=asdf[0].cells[2];
+                        as.innerHTML=markers[a].position.lat();
+                        df.innerHTML=markers[a].position.lng();
+                        locations[a][1]=markers[a].position.lat();
+                        locations[a][2]=markers[a].position.lng();
+                        infowindow.setContent(locations[i][0]);
+                        infowindow.open(map, markers[a]);
+                      //  console.log(infowindow,"////1111/1/1/1/1/")
+                    }
+                    // console.log(i)
+                    //if (lineex==true)
+                        //makeline(gh.innerHTML);
+
+                    // console.log(marker)
+                }
+            }
+        })(event, marker, i));
+        google.maps.event.addListener(marker,'mouseout',(function(event,marker){
+            return function(){
+                infowindow.close();
+                // console.log(event.latLng.lat());
+                for(var b=0;b<markers.length;b++){
+                    if(markers[b]==marker){
+                        asdf= document.getElementsByClassName("item"+(b+1));
+                       // console.log("item"+(b+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1] ;
+                        as.innerHTML=markers[b].position.lat();
+                        df.innerHTML=markers[b].position.lng();
+                        locations[b][1]=markers[b].position.lat();
+                        locations[b][2]=markers[b].position.lng();
+                    }
+                }
+            }
+        })(event, marker));
+        
+        google.maps.event.addListener(marker,'mouseup',(function(event,marker,i){
+            return function(){
+                // console.log(event.latLng.lat());
+                for(var b=0;b<markers.length;b++){
+                    if(markers[b]==marker){
+                        asdf= document.getElementsByClassName("item"+(b+1));
+                        console.log("item"+(b+1));
+                        as=asdf[0].cells[0];
+                        df=asdf[0].cells[1];
+                        gh=asdf[0].cells[2];
+                        as.innerHTML=markers[b].position.lat();
+                        df.innerHTML=markers[b].position.lng();
+                        locations[b][1]=markers[b].position.lat();
+                        locations[b][2]=markers[b].position.lng();
+                    }
+                }
+                // console.log(gh.innerHTML)
+                if (lineex==true)
+                    makeline(gh.innerHTML);
+            }
+        })(event, marker,i));
+        google.maps.event.addListener(marker,'dblclick',(function(event,marker,i){
+            return function(){
+                console.log("111");
+                info=prompt("정보 입력 (<br> 입력시 한 줄 띄움) "+array1[i],locations[i][0]);
+                if(info!=null)
+                    locations[i][0]=info;
+            }
+        })(event, marker,i));
+        google.maps.event.addListener(map, 'click', function(event) {
+            document.getElementById("x").value=event.latLng.lat();
+            document.getElementById("y").value=event.latLng.lng();
+            lox=event.latLng.lat();
+            loy=event.latLng.lng();
+            //placeMarker(event.latLng);
+            //console.log(event.latLng)
+           // console.log(lines1)
+        });
+        google.maps.event.addListener(marker, 'rightclick', function(event) {
+          // a=confirm("웹페이지 이동?")
+            if(a){
+                //alert(a)
+            }else{
+                //alert("ㅁㅁㅁ")
+            }
+
+        });
+    }
+
+
+    function here(){
+        console.log(markers[1].position.lat())
+    }
+    function m1akehidden(){
+       document.getElementById("example").style.display='none'
+
+
+    }
+    $("#errmake").click(function() {
+        a=alert(i)
+        if(typeof a=="undefined"){
+           // errmake();
+        }
+        }
+    );
+    var i =0
+    function errmake(){
+        a=alert(i)
+        i++
+        if(i==10){
+            alert("")
+        }else if(typeof a=="undefined"){
+            errmake();
+        }
+
+    }
+    function errmarker(errmac){
+      //  markers[2].setIcon(alertmark)
+        //alert(errmac," : err mac ")
+        console.log(array1[0],errmac)
+        for(var b=0;b<markers.length;b++){
+            asdf= document.getElementsByClassName("item"+(b+1));
+            gh=asdf[0].cells[2];
+            if (gh.innerHTML==errmac){
+                markers[b].setIcon(alertmark)
+                for(var i=0;i<lines.length;i++){
+                    if (lines[i]==conmac[errmac]){
+                        console.log(i)
+                        clearInterval(funcar[i]);
+                    }
+                    if (lines[i]==conmac[conmac2[errmac]]){
+                        console.log(i)
+                        clearInterval(funcar[i]);
+                    }
+                }
+            }
+        }
+    }
+    function makeline(mac){
+       // console.log(mac);
+       // console.log(conmac[mac]); //이놈이 연결된 라인 정보
+       // console.log(conmac1[mac]); //이놈이 연결된 맥
+       // console.log(conmac2[mac]);//이놈한테 연결된 맥
+       // console.log(lines)
+       // console.log(lines1)
+       // console.log(conmac2[conmac1[mac]],mac)
+        if((mac==conmac1[conmac2[mac]])||(conmac2[conmac1[mac]]==mac)){
+            var str=findmacno(mac);
+            var end=findmacno(conmac1[mac]);
+            for(var i=0;i<lines.length;i++){
+                //console.log(lines[i]);
+                //console.log(lines1[i]);
+                if(lines[i]==conmac[mac]){
+                    //  console.log(i);
+                    lines[i].setMap(null);
+                    lines1[i].setMap(null);
+                    lines1[i] = new google.maps.Polyline({
+                        path: [{lat: locations[str][1], lng: locations[str][2]}, {lat:locations[end][1], lng:locations[end][2]}],
+                        strokeOpacity: 0.5, //기본 라인
+                        strokeColor:'white',
+                        strokeWeight:2,
+                        icons: [{
+                            icon: lineSymbol,
+                            offset: '0',
+                            // repeat: '50px'
+                        }],
+                        map: map
+                    });
+                    lines[i] = new google.maps.Polyline({
+                        path: [{lat: locations[str][1], lng: locations[str][2]}, {lat:locations[end][1], lng:locations[end][2]}],
+                        strokeOpacity: 0.5, //기본 라인
+                        strokeColor:'white',
+                        strokeWeight:2,
+                        icons: [{
+                            icon: lineSymbol,
+                            offset: '0',
+                            //repeat: '50px'
+                        }],
+                        map: map
+                    });
+                    conmac[mac]=lines[i];
+                }
+                //console.log(conmac2[mac]);
+                var str1=findmacno(conmac2[mac]);
+                var end1=findmacno(mac);
+                if(lines[i]==conmac[conmac2[mac]]){
+                    // console.log(i);
+                    lines[i].setMap(null);
+                    lines1[i].setMap(null);
+                    lines[i] = new google.maps.Polyline({
+                        path: [{lat: locations[str1][1], lng: locations[str1][2]}, {lat:locations[end1][1], lng:locations[end1][2]}],
+                        strokeOpacity: 0.2,strokeWeight:2,
+                        icons: [{
+                            icon: lineSymbol,
+                            offset: '0',
+                            // repeat: '50px'
+                        }],
+                        map: map
+                    });
+                    lines1[i] = new google.maps.Polyline({
+                        path: [{lat: locations[str1][1], lng: locations[str1][2]}, {lat:locations[end1][1], lng:locations[end1][2]}],
+                        strokeOpacity: 0.5, //기본 라인
+                        strokeColor:'white',
+                        strokeWeight:2,
+                        icons: [{
+                            icon: lineSymbol,
+                            offset: '0',
+                            // repeat: '50px'
+                        }],
+                        map: map
+                    });
+                    conmac[conmac2[mac]]=lines[i];
+                }
+            }
+
+        }else{
+
+        }
+
+
+
+
+        //line.setMap(null);
+        //line1.setMap(null);
+       // line2.setMap(null);
+        //savedmacaddrs
+        // console.log(conmac,conmac1)
+        /*lines[0].setMap(null);
+         lines[1].setMap(null);
+         lines[0] = new google.maps.Polyline({
+         path: [{lat: locations[0][1], lng: locations[0][2]}, {lat:locations[1][1], lng:locations[1][2]}],
+         strokeOpacity: 0.1,
+         icons: [{
+         icon: lineSymbol,
+         offset: '0',
+         repeat: '30px'
+         }],
+         map: map
+         });*/
+    }
+    function makeline1(mac1,mac2,upsp,dnsp){
+
+        console.log(mac1,mac2);
+        console.log(conmac2)
+        console.log(conmac1);
+        console.log(conmac)
+        //console.log(conmac1[mac1],"에붙었다가",mac2,"지금 에붙었다");
+        //console.log(mac2);
+        if(mac2=="0"){
+           /* for(var i=0;i<lines.length;i++){
+                if(lines[i]==conmac[mac1]){
+                   // console.log(lines,"/asdasdqwae///");
+                    lines[i].setMap(null);
+                    lines1[i].setMap(null);
+                    clearInterval(funcar[i]);
+                    funcar.splice(i,1);
+                    lines1.splice(i,1);
+                    lines.splice(i,1);
+                    makenewline[mac1]=true
+                }}*/
+        }else if(indexmacaddr.indexOf(mac2)==-1)
+        {
+            //alert(mac2)
+        }else{
+            if(typeof conmac1[mac1]!="undefined"&&conmac1[mac1]!=mac2){
+                makenewline[mac1]=true
+                for(var i=0;i<lines.length;i++){
+                    if(lines[i]==conmac[mac1]){
+                        console.log(lines,"/asdasdqwae///");
+                        lines[i].setMap(null);
+                        lines1[i].setMap(null);
+                        clearInterval(funcar[i]);
+                        funcar.splice(i,1);
+                        lines1.splice(i,1);
+                        lines.splice(i,1);
+
+                    }}
+                //console.log(conmac1[mac1],mac2)
+                //console.log(conmac[mac1].setMap(null))
+                //console.log(conmac[conmac2[mac1]].setMap(null))
+            }
+
+            var check1;
+            var check2;
+            // console.log(conmac);
+            //console.log(mac1,mac2);
+            //flightPath.setMap(null);
+            for (j=0;j<savedmacaddrs.length;j++){
+                if(savedmacaddrs[j]==mac1){
+                    check1=j
+                }else if(savedmacaddrs[j]==mac2){
+                    check2=j
+                }
+            }
+            console.log(makenewline[mac1])
+            if(((conmac1[mac1]==mac2)&&(makenewline[mac1]==false))||((makenewline[mac1]!=false)&&(conmac2[mac2]==mac1))){
+                console.log(lines)
+                for(var i=0;i<lines.length;i++){
+                    console.log(lines[i]==conmac[mac1])
+                    if(lines[i]==conmac[mac1]){
+                        linespeed(i,upsp,dnsp);
+                    }}
+                //console.log(locations[check1][1],locations[check2][1])
+            }else if(typeof locations[check1][1]=="undefined"){
+                // alert(savedmacaddrs[check1]+"의 좌표가없습니다.")
+            }else if(typeof locations[check2][1]=="undefined"){/*alert(savedmacaddrs[check2]+"의 좌표가없습니다.")*/;}else{
+                for(var a=0;a<savedmacaddrs.length;a++){
+                    //console.log("item"+(a+1));
+                    asdf= document.getElementsByClassName("item"+(a+1));
+                    gh=asdf[0].cells[2];
+                    if(gh.innerHTML==mac1){
+                        console.log(asdf[0].cells[0].innerHTML,asdf[0].cells[1].innerHTML,a);
+                        var st=a;
+                        console.log(st)
+                    }
+                    if (gh.innerHTML==mac2){
+                        console.log(asdf[0].cells[0].innerHTML,asdf[0].cells[1].innerHTML);
+                        var des=a;
+                        // console.log(des)
+                    }
+                }
+                line = new google.maps.Polyline({
+                    path: [{lat: locations[st][1], lng: locations[st][2]}, {lat:locations[des][1], lng:locations[des][2]}],
+                    strokeOpacity: 0.5, //기본 라인
+                    strokeColor:'white',
+                    strokeWeight:2,
+                    icons: [{
+                        // icon: lineSymbol,
+                        //offset: '30',
+                        repeat: '30px' //리핏되는곳 여기
+                    }],
+                    map: map
+                });
+                line1 = new google.maps.Polyline({
+                    path: [{lat: locations[st][1], lng: locations[st][2]}, {lat:locations[des][1], lng:locations[des][2]}],
+                    strokeOpacity: 0.5, //기본 라인
+                    strokeColor:'white',
+                    strokeWeight:2,
+                    icons: [{
+                        // icon: lineSymbol,
+                        //offset: '30',
+                        repeat: '30px' //리핏되는곳 여기
+                    }],
+                    map: map
+                });
+                lineex=true;
+                // console.log(line1)
+                lines.push(line);
+                lines1.push(line1)
+                conmac[mac1]=line;
+                conmac1[mac1]=mac2;
+                conmac2[mac2]=mac1;
+                makenewline[mac1]=false
+            }
+        }
+
+
+
+    }
+    function findmacno(mac){
+        for(i=0;i<savedmacaddrs.length;i++){
+            if(mac==savedmacaddrs[i]){
+                return i;
+            }
+        }
+    }
+    function mapinfo(){
+        showopen=window.open("http://" + server_url + ":8080/maploc","nodeok","menubar=0 width=1, height=1");
+        setInterval(function() {
+            showopen.close();
+            location.href="mapmak.html";
+        },1000);
+    }
+    function LockF5() {
+        if (event.keyCode == 116) {
+            event.keyCode = 0;
+            mapinfo()
+            return false
+        }else if(event.keyCode==13&&event.ctrlKey){
+           // aka+='<br>'
+            console.log("컨트롤 엔터")
+            return false
+        }else if(event.ctrlKey&&event.keyCode==83){
+            $('#save').trigger('click');
+            return false
+        }
+        console.log(event.keyCode)
+    }
+    document.onkeydown = LockF5;
+    
+    //todo 테이블을 만든다. 마커가 보니까 좌표 넣는대로 순서대로 들어가는거 같은데
+    //todo 만약 0번테이블이라고 하면
+   /* var line1 = new google.maps.Polyline({
+        path: [{lat: 22.291, lng: 153.027}, {lat:22.291, lng: 153.030}],
+        icons: [{
+            icon: lineSymbol,
+            //offset: '50%',
+            repeat: '20px'
+        }],
+        map: map
+    });
+    var line2 = new google.maps.Polyline({
+        path: [{lat: 22.290, lng: 153.027}, {lat:22.290, lng: 153.030}],
+        icons: [{
+            icon: lineSymbol,
+            //offset: '50%',
+            repeat: '20px'
+        }],
+        map: map
+    });*/
+    var newline=new Array();
+    var funcar=new Array();
+    var funcarrevers=new Array();
+    newline.push(line1);
+    newline.push(line2);
+    //console.log(line1.icons[0].icon=lineSymbol);
+
+    var shown=new Array();
+    var updown=new Array();
+    var shownrevers=new Array();
+
+   $("#result10").click(function(){
+       linespeed(0,1,10);
+    });
+   function linespeed(i,j,k){
+       //console.log(i,j,k)
+       if(j!=0){
+           //console.log(shown[i])
+           if(typeof shown[i]=="undefined"){
+               shown[i]=0
+               shownrevers[i]=0
+           }else{
+           }
+           //console.log(shown[i])
+           clearInterval(funcar[i]);
+           funcar[i]=setInterval(function(){toggle(i,j,k)},50);
+       }else if(j==0){
+           clearInterval(funcar[i]);
+       }
+   }
+
+    $("#result11").click(function(){
+        linespeed(0,1,2);
+    });
+    function toggle(i,j,k){
+        //console.log(lines)
+        //console.log(i)
+        //console.log(lines1,lines)
+        var icons=lines[i].get('icons');
+        //lines[i].strokeOpacity='1'
+        var icons1=lines1[i].get('icons');
+        line1=lines[i]
+        line2=lines1[i]
+       // console.log(shown[i])
+        icons[0].icon=lineSymbol;
+        icons[0].repeat='50%'
+        icons1[0].icon=lineSymbol2;
+        icons1[0].repeat='50%';
+        //console.log(shown[i]);
+
+        if(shown[i]>100){
+            //shown[i]=shown[i]-100
+        }
+        if(shownrevers[i]<=0){
+            shownrevers[i]=shownrevers[i]+6500000;
+        }
+          //  console.log(shown[i],shownrevers[i])
+            icons[0].offset=shown[i]*cross+'px';
+           icons1[0].offset=shownrevers[i]*cross+'px';
+            line1.set('icons', icons);
+            line2.set('icons', icons1);
+            shown[i]=shown[i]+j;
+            shownrevers[i]=shownrevers[i]-k;
+            //console.log(shown[i])
+    }
+    function bootnow(mac){
+        for(var b=0;b<markers.length;b++){
+            asdf= document.getElementsByClassName("item"+(b+1));
+            gh=asdf[0].cells[2];
+            if (gh.innerHTML==mac){
+                markers[b].setIcon(bootnowicon)
+              //  alert(b)
+            }
+        }
+
+    }
+    function ShowSliderValue(sVal)
+    {
+        var obValueView = document.getElementById("slider_range");
+        obValueView.title="배속 X"+sVal/10
+        console.log(sVal)
+    }
+
+    var RangeSlider = function(){
+        var range = $('.slider_range');
+        range.on('input', function(){
+            ShowSliderValue(this.value);
+            cross=this.value/10
+        });
+    };
+    function timer(){
+        var date = new Date();
+        // 그 지역의 날짜 (locale date).
+        var dateString = date .toLocaleDateString();
+        // 그 지역의 시간 (locale time).
+        var timeString = date .toLocaleTimeString();
+        var text = dateString + " " + timeString;
+        // 'text'만 저장하고, 이 함수 끝내기.
+        return text;
+    }
+
+
+    function get_timer(){
+
+        // 함수값 불러와서, 태그 안에 집어넣기.
+        document.getElementById( "realTimer" ).innerHTML= timer();
+        // 1000 밀리초(=1초) 후에, 이 함수를 실행하기 (반복 실행 효과).
+        setTimeout( "get_timer()", 1000 );
+    }
+
+
+    /*function toggle1(i){
+        var icons=lines[i].get('icons');
+        line1=lines[i]
+        console.log(shownrevers[i])
+        icons[0].icon=lineSymbol;
+        if(shownrevers[i]<0){
+            icons[0].offset='100%'
+            line1.set('icons', icons);
+            shownrevers[i]=100;
+            console.log( shownrevers[i])
+        }else{
+            icons[0].offset=shownrevers[i]+'%'
+            line1.set('icons', icons);
+            shownrevers[i]= shownrevers[i]-2;
+        }
+    }*///역방향
+  /* function toggle(i){
+        var icons=lines[i].get('icons');
+        line1=lines[i]
+        console.log(shown[i])
+        if(shown[i]==0){
+            icons[0].offset='0%'
+            line1.set('icons', icons);
+            shown[i]=shown[i]+1
+            console.log(shown)
+        }else if ( shown[i]==1){
+            icons[0].offset='10%'
+            line1.set('icons', icons);
+            shown[i]= shown[i]+1
+            console.log(shown)
+        }else if ( shown[i]==2){
+            icons[0].offset='20%'
+            line1.set('icons', icons);
+            shown[i]= shown[i]+1
+            console.log(shown)
+        }else if ( shown[i]==3){
+            icons[0].offset='30%'
+            line1.set('icons', icons);
+            shown[i]= shown[i]+1
+            console.log(shown)
+        }else if ( shown[i]==4){
+            icons[0].offset='40%'
+            line1.set('icons', icons);
+            shown[i]=0;
+            console.log(shown)
+        }
+    }*/ // 오프셋 디폴트
+</script>
+</html>
+<!-- 코드 보관소
+   map.center=new google.maps.LatLng(37, 127.1); //화면을 중앙에 놓기
+   $(document).ready(function(){
+   });
+    $(".delBtn").live("click", function(){
+  //클래스가 delBtn인게 눌렸을 때 함수 실행
+        });
+    $("#result10").click(function(){
+  //얘는 아이디가 이거인애가 눌렸을 때.
+        });
+
+   //marker.setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png')
+      마커 변경
+
+       function animateCircle(line) {
+          var count = 0;
+          window.setInterval(function() {
+            count = (count + 1) % 200;
+
+            var icons = line.get('icons');
+            icons[0].offset = (count / 2) + '%';
+            line.set('icons', icons);
+        }, 20);
+      }
+
+-->

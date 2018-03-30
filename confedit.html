@@ -1,0 +1,303 @@
+﻿
+
+<!DOCTYPE html> <html>	<html lang="en">
+<head>
+
+
+    <style>
+        table {width:100%;} table, th, td {border: 1px solid black; border-collapse: collapse;	}
+        th, td { padding: 5px; text-align: center;}
+        table.names tr:nth-child(even) { background-color: #eee; }
+        table.names tr:nth-child(odd) {background-color:#fff; }
+        table.names th { background-color: black; color: white }
+    </style>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<table class="names">
+    <tr> <th>모델: {{.ModelName}}</th><th>MAC: {{.MacAddr}}</th> </tr>
+    <tr><td colspan="2" style="font-size:12pt; color:#ff0000;">{{.ReadDefaultFile}}</td></tr>
+    <tr> <td>장비 IP 주소</td> <td style="height:24px; background-color: #f0f0f0;"><input id="Lan_ipaddrTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#0000FF; font-weight:bold;" class="form-control" value="{{.Lan_ipaddr}}"></td> <tr>
+    <tr> <td>서브넷마스크</td> <td style="height:24px; background-color: #f0f0f0;"><input id="Lan_netmaskTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#448888; font-weight:bold;" class="form-control" value="{{.Lan_netmask}}"></td> <tr>
+    <tr> <td>게이트웨이</td> <td style="height:24px; background-color: #f0f0f0;"><input id="Lan_gwTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#448888; font-weight:bold;" class="form-control" value="{{.Lan_gateway}}"></td> <tr>
+
+    <tr> <td id="2G">2G SSID</td> <td style="height:24px; background-color: #f0f0f0;"><input id="Lan_ssid_2GTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#8833aa; font-weight:bold;" class="form-control" value="{{.SSID_2G}}"></td> <tr>
+    <tr> <td id="2Gps">2G 접속비번</td ><td style="height:24px; background-color: #f0f0f0;"> &nbsp&nbsp&nbsp<input id="Lan_2G_pwTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#7744aa; font-weight:bold;" class="form-control" value="{{.WPAPSK_2G}}"><input type="checkbox"id="Cancle2G" checked="false" title="비밀번호 사용 유무"onclick="checked1(this);"><tr>
+    <tr> <td id="5G">5G SSID</td> <td style="height:24px; background-color: #f0f0f0;"><input id="Lan_ssid_5GTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#33ee00; font-weight:bold;" class="form-control" value="{{.SSID_5G}}"></td> <tr>
+    <tr> <td id="5Gps">5G 접속비번</td> <td style="height:24px; background-color: #f0f0f0;"> &nbsp&nbsp&nbsp<input id="Lan_5G_pwTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#33bb44; font-weight:bold;" class="form-control" value="{{.WPAPSK_5G}}"><input type="checkbox"id="Cancle5G" checked="false" title="비밀번호 사용 유무"onclick="checked2(this);"></td><tr>
+    <tr> <td>NMS 서버 주소</td> <td style="height:24px; background-color: #f0f0f0;"><input id="NMS_ipaddrTag" type="text" style="height:24px; background-color: #f0f0f0; border: 1px; font-size:14pt; color:#0000FF; font-weight:bold;" class="form-control" value="{{.CURL}}"></td> <tr>
+</table>
+<p id="macAddressTag">{{.MacAddr}}</p>
+<input type="button" id='save1' value="장비 정보 불러오기" onclick="load_data();"><button onclick="send_form();" style="float: right;">변경내용 저장하기</button>
+<div sytle="background color:blue;">
+    <form id="detailConfig" action="main.go" method="get">
+        <textarea id="default1" style= "min-width:100%; max-width:100%; min-height:480px; max-height:480px">
+            {{.Config_string}}
+        </textarea>
+    </form>
+</div>
+</body>
+</html>
+
+<script>
+    if(document.getElementById("default1").innerHTML.indexOf("lanConnectionMode : 1")!=-1){
+        alert("This Equip Lan Ip is DHCP \nShowing Config IP can be different From DHCP IP")
+    }
+    //alert(document.getElementById("default1").innerHTML.indexOf("lanConnectionMode : 1"))
+
+    test=document.getElementById("default1").innerHTML;
+    console.log(test.indexOf("OperationMode : 1"))
+    if(test.indexOf("OperationMode : 1")!=-1){
+        alert("This Equip is GateWay Mode")
+    }
+    var ModelName="{{.ModelName}}"
+    console.log(ModelName)
+   // alert(server_url)
+    function load_data(){
+        var macAddrs = document.getElementById("macAddressTag").innerHTML;
+        window.open("loadconfig?macaddr="+macAddrs,"_self");
+    }
+
+    if (ModelName=="MAP7500")
+    {
+        var secure;
+        var secure1;
+        var chk1
+        chk1=document.getElementById("Cancle2G")
+        chk2=document.getElementById("Lan_2G_pwTag")
+        chk3=document.getElementById("Cancle5G")
+        chk4=document.getElementById("Lan_5G_pwTag")
+        var firststatus="{{.Security_mode_2G}}"
+        var secondstatus="{{.Security_mode_5G}}"
+        secure=firststatus
+        secure1=secondstatus
+        if (firststatus=="DISABLE"){
+            chk1.checked=false;
+            chk2.readOnly=true;
+            document.getElementById("Lan_2G_pwTag").style.color="#eee";
+        }
+        else if(firststatus=="WPA2_PERSONAL"){
+            chk1.checked=true;
+            chk2.readOnly=false;
+            document.getElementById("Lan_2G_pwTag").style.color="purple";
+        }
+
+        if (secondstatus=="DISABLE"){
+            chk3.checked=false;
+            chk4.readOnly=true;
+            document.getElementById("Lan_5G_pwTag").style.color="#eee";
+        }
+        else if(secondstatus=="WPA2_PERSONAL"){
+            chk3.checked=true;
+            chk4.readOnly=false;
+            document.getElementById("Lan_5G_pwTag").style.color="purple";
+        }
+        function checked1(chk){
+            var psblock=document.getElementById("Lan_2G_pwTag")
+
+            if(chk.checked==true){
+                secure="WPA2_PERSONAL"
+                psblock.readOnly=false;
+                document.getElementById("Lan_2G_pwTag").style.color="purple";
+            }
+            else{
+                secure="DISABLE";
+                psblock.readOnly=true;
+                document.getElementById("Lan_2G_pwTag").style.color="#eee";
+
+            }
+            console.log(secure)
+        }
+        function checked2(chk){
+            var psblock=document.getElementById("Lan_5G_pwTag")
+            if(chk.checked==true){
+                secure1="WPA2_PERSONAL"
+                psblock.readOnly=false;
+                document.getElementById("Lan_5G_pwTag").style.color="purple";
+            }
+            else{
+                secure1="DISABLE";
+                psblock.readOnly=true;
+                document.getElementById("Lan_5G_pwTag").style.color="#eee";
+            }
+            console.log(secure1)
+        }
+
+        function send_form () {
+
+            var macAddrs = document.getElementById("macAddressTag").innerHTML;
+            var Lan_iaddr = document.getElementById("Lan_ipaddrTag").value;
+            var Lan_netmask = document.getElementById("Lan_netmaskTag").value;
+            var Lan_gateway = document.getElementById("Lan_gwTag").value;
+            var SSID_2G = document.getElementById("Lan_ssid_2GTag").value;
+            var WPAPSK_2G = document.getElementById("Lan_2G_pwTag").value;
+            var SSID_5G = document.getElementById("Lan_ssid_5GTag").value;
+            var WPAPSK_5G = document.getElementById("Lan_5G_pwTag").value;
+            var securesend="&Secure_Mode_2G="+secure+"&Secure_Mode_5G="+secure1
+
+            if ((WPAPSK_2G.length<8&&document.getElementById("Lan_2G_pwTag").readOnly!=true)||(WPAPSK_5G.length<8&&document.getElementById("Lan_5G_pwTag").readOnly!=true)){
+                var confi=confirm("비밀번호는 8자리 이상이어야 합니다.\n 장비에 접속이 안될수도 있습니다.\n 진행하시겠습니까?")
+            }
+            if (confi==true||confi==null){
+                var urlQueryStr =  "&macAddr=" +	macAddrs + "&Lan_ipaddr=" + Lan_iaddr + "&Lan_netmask=" + Lan_netmask
+                    + "&Lan_gateway=" + Lan_gateway + "&SSID_2G=" + SSID_2G + "&WPAPSK_2G=" + WPAPSK_2G +
+                    "&SSID_5G=" + SSID_5G + "&WPAPSK_5G=" + WPAPSK_5G+securesend;
+                console.log (urlQueryStr);
+
+                window.open("editconfig?saveFlag=save" + urlQueryStr, "_self");
+
+            }
+
+        }
+    }
+    else if (ModelName=="MAP7700"||ModelName=="MAP9220"||ModelName=="MAP9200"||ModelName=="MAP5010"||ModelName=="MAP2010")
+    {
+        var secure;
+        var secure1;
+        var chk1
+        chk1=document.getElementById("Cancle2G")
+        chk2=document.getElementById("Lan_2G_pwTag")
+        chk3=document.getElementById("Cancle5G")
+        chk4=document.getElementById("Lan_5G_pwTag")
+        var firststatus="{{.Security_mode_2G}}"
+        var first1="{{.Security_mode_enc_2G}}"
+        var secondstatus="{{.Security_mode_5G}}"
+        var second2="{{.Security_mode_enc_5G}}"
+        secure=firststatus
+        secure1=secondstatus
+        secure3=first1
+        secure4=second2
+        if (firststatus=="OPEN"){
+            chk1.checked=false;
+            chk2.readOnly=true;
+            document.getElementById("Lan_2G_pwTag").style.color="#eee";
+        }
+        else if(firststatus=="WPA2PSK"){
+            chk1.checked=true;
+            chk2.readOnly=false;
+            document.getElementById("Lan_2G_pwTag").style.color="purple";
+        }
+
+        if (secondstatus=="OPEN"){
+            chk3.checked=false;
+            chk4.readOnly=true;
+            document.getElementById("Lan_5G_pwTag").style.color="#eee";
+        }
+        else if(secondstatus=="WPA2PSK"){
+            chk3.checked=true;
+            chk4.readOnly=false;
+            document.getElementById("Lan_5G_pwTag").style.color="purple";
+        }
+        function checked1(chk){
+            var psblock=document.getElementById("Lan_2G_pwTag")
+
+            if(chk.checked==true){
+                secure="WPA2PSK"
+                secure3="TKIPAES"
+                psblock.readOnly=false;
+                document.getElementById("Lan_2G_pwTag").style.color="purple";
+            }
+            else{
+                secure="OPEN";
+                secure3="NONE"
+                psblock.readOnly=true;
+                document.getElementById("Lan_2G_pwTag").style.color="#eee";
+
+            }
+            console.log(secure)
+        }
+        function checked2(chk){
+            var psblock=document.getElementById("Lan_5G_pwTag")
+            if(chk.checked==true){
+                secure1="WPA2PSK"
+                secure4="TKIPAES"
+                psblock.readOnly=false;
+                document.getElementById("Lan_5G_pwTag").style.color="purple";
+            }
+            else{
+                secure1="OPEN";
+                secure4="NONE";
+                psblock.readOnly=true;
+                document.getElementById("Lan_5G_pwTag").style.color="#eee";
+            }
+            console.log(secure1)
+        }
+        if (ModelName=="MAP2010")
+        {
+            document.getElementById("2G").innerHTML="########"
+            document.getElementById("2Gps").innerHTML="########"
+            document.getElementById("5G").innerHTML="2G SSID"
+            document.getElementById("5Gps").innerHTML="2G 접속 비번"
+            document.getElementById("Lan_2G_pwTag").style.color="#eee";
+            document.getElementById("Lan_ssid_2GTag").style.color="#eee";
+            document.getElementById("Lan_ssid_2GTag").title="사용안함";
+            document.getElementById("Lan_2G_pwTag").title="사용안함";
+            chk1.checked=false;
+            chk2.readOnly=true;
+            var div=document.getElementById("Cancle2G");
+            div.style.visibility = "hidden";
+        }
+        else if(ModelName=="MAP5010"){
+            document.getElementById("2G").innerHTML="########"
+            document.getElementById("2Gps").innerHTML="########"
+            document.getElementById("Lan_2G_pwTag").style.color="#eee";
+            document.getElementById("Lan_ssid_2GTag").style.color="#eee";
+            document.getElementById("Lan_ssid_2GTag").title="사용안함";
+            document.getElementById("Lan_2G_pwTag").title="사용안함";
+            chk1.checked=false;
+            chk2.readOnly=true;
+            var div=document.getElementById("Cancle2G");
+            div.style.visibility = "hidden";
+        }
+        function send_form () {
+
+            var macAddrs = document.getElementById("macAddressTag").innerHTML;
+            var Lan_iaddr = document.getElementById("Lan_ipaddrTag").value;
+            var Lan_netmask = document.getElementById("Lan_netmaskTag").value;
+            var Lan_gateway = document.getElementById("Lan_gwTag").value;
+            var SSID_2G = document.getElementById("Lan_ssid_2GTag").value;
+            var WPAPSK_2G = document.getElementById("Lan_2G_pwTag").value;
+            var SSID_5G = document.getElementById("Lan_ssid_5GTag").value;
+            var WPAPSK_5G = document.getElementById("Lan_5G_pwTag").value;
+            var curlsend=document.getElementById("NMS_ipaddrTag").value
+            var securesend2G="&Secure_Mode_2G="+secure+"&Secure_Mode_enc_2G="+secure3
+            var securesend5G="&Secure_Mode_5G="+secure1+"&Secure_Mode_enc_5G="+secure4
+
+            if (WPAPSK_2G.length<8&&document.getElementById("Lan_2G_pwTag").readOnly!=true){
+                var confi=confirm("비밀번호는 8자리 이상이어야 합니다.\n 비밀번호를 해제하시겠습니까?")
+            }if (WPAPSK_5G.length<8&&document.getElementById("Lan_5G_pwTag").readOnly!=true){
+                var confi1=confirm("비밀번호는 8자리 이상이어야 합니다.\n 비밀번호를 해제하시겠습니까?")
+            }
+
+
+            if (confi){
+                securesend2G="&Secure_Mode_2G=OPEN&Secure_Mode_enc_2G=NONE"
+            }else{
+               //confi=false
+            }
+            if (confi1){
+                securesend5G="&Secure_Mode_5G=OPEN&Secure_Mode_enc_5G=NONE"
+            }else{
+              // confi1=false
+            }
+            //alert(confi)
+            if (confi==true||typeof(confi)=="undefined"||confi1==true){
+                var urlQueryStr =  "&macAddr=" +	macAddrs + "&Lan_ipaddr=" + Lan_iaddr + "&Lan_netmask=" + Lan_netmask
+                    + "&Lan_gateway=" + Lan_gateway + "&SSID_2G=" + SSID_2G + "&WPAPSK_2G=" + WPAPSK_2G +
+                    "&SSID_5G=" + SSID_5G + "&WPAPSK_5G=" + WPAPSK_5G+securesend2G+securesend5G+"&curl_server_url=" + curlsend;
+                //alert (urlQueryStr);
+                console.log(urlQueryStr)
+                window.open("editconfig?saveFlag=save" + urlQueryStr, "_self");
+
+            }
+
+        }
+    }
+
+    // html 코드창고
+    // <button onclick="location.href='http://localhost:8080/editconfig?saveFlag=save&macAddr={{.MacAddr}}'">변경내용 저장하기</button>
+
+    // js 코드 창고
+    //
+</script>

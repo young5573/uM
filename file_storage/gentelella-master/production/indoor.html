@@ -1,0 +1,1362 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="../production/serveraddr.js"></script>
+<script>
+    var ws = new WebSocket("ws://"+server_url+":8100/websocket");
+
+var indexmacaddr="00:06:7A:05:04:91;table:20;end"
+        var table;
+        array1=indexmacaddr.split(';');
+        array1.pop();
+        var table1=array1.pop();
+        table=table1.substr(6);
+        console.log(table);
+        console.log(array1);
+
+    </script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" href="./jmpsys_wifi.ico" >
+    <title>uManager 3.3</title>
+    <!--  AIzaSyDB0MGa1Mw-4D5T6W-lmE8jR4EIEeOnQeE "http://maps.google.com/maps/api/js?sensor=false"-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDB0MGa1Mw-4D5T6W-lmE8jR4EIEeOnQeE"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- 캐쉬 안쌓이게 해보자.... -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <META http-equiv="Expires" content="-1">
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="No-Cache">
+    <!-- 파비콘을 설정한다. png 를 ico로 변환하는 과정이 필요 -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <script src="../vendors/map/infobubble.js"></script>
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 링크 엘리먼트는 웹url이 지정하는 파일을 스타일쉬트와 연결시켜준다
+    즉 CSS 내용을 축적하여 만들어 나가기 위한 것이지 자바스크립트와는 관계가 없다. -->
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.min.css" rel="stylesheet">
+    <style>
+        .class-with-tooltip:hover:after{
+            content: '';
+            width:460px;
+            height:200px;
+            position: absolute;
+            top:-100px;
+            padding: 5px;
+            border: 1px solid gray;
+            background-color:white;
+            background-image: url('images/tooltip.png');
+            font-size: 14px;
+
+
+        }
+
+        td{
+            text-align: center;
+        }
+        table.dataTable.select tbody tr,
+        table.dataTable thead th:first-child {
+            cursor: pointer;
+        }
+        .example tr{
+            text-align:center;
+        }
+        .mainwindow{
+            width: 100%;
+            height:100%;
+
+        }
+        .right-box {
+            overflow:auto;
+            border: 1px solid #ddd;
+            height:100%;
+            overflow: hidden;
+
+        }
+        .nav1 {
+            overflow:auto;
+            border: 1px solid #ddd;
+            float: left;
+            width:170px;
+            height:100%;
+            overflow:auto;
+
+        }
+        li{
+            cursor:pointer;
+        }
+        .drag{
+            position:absolute;
+            cursor:hand;
+            z-index: 100;
+        }
+
+    </style>
+
+</head>
+<body class="nav-md" oncontextmenu="return false;">
+
+<!--button id="result10">느리게</button>
+<button id="result11">빠르게</button-->
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="index.html"><center> <img src="images/logo.png"style="width:90%;height:90% ;"></center></a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <!-- menu profile quick info -->
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img src="images/jsn270.png" alt="..." class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>Wemcome,</span>
+                        <h2>Manager</h2>
+                    </div>
+                </div>
+                <!-- /menu profile quick info -->
+                <br />
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <h3>JMPSYSTEMS uManager 3.3</h3>
+                        <ul class="nav side-menu">
+                            <li><a><i class="fa fa-area-chart"></i> Basic Management <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href='index.html'>Status</a></li>
+                                    <li><a href='index1.html'>Management</a></li>
+                                    <!--li><a href='index2.html'>AP 관계도</a></li-->
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-archive"></i> Field Management <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a onclick="mapinfo()">Outdoor</a></li>
+                                    <li><a href='indoor.html'>Indoor</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu_section">
+                        <!--h3>개발예정 메뉴</h3-->
+                        <ul class="nav side-menu">
+                            <!--li><a><i class="fa fa-bug"></i> 버그신고 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a target="_blank" href="http://www.jmpsys.com">개발자에게 알리기</a></li>
+                                    <li><a href='#Redirect'>프로젝트 블로그</a></li>
+                                </ul>
+                            </li-->
+                            <li><a target="_blank" href="http://www.jmpsys.com"><i class="fa fa-laptop"></i> Go JMP Site <span class="label label-success pull-right">JMPSYS</span></a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+                <div class="sidebar-footer hidden-small">
+                    <!--a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a-- data-toggle="tooltip" data-placement="top" title="Logout">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a-->
+                </div>
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--li class="">
+                            <a href="javascript:" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <img src="images/jsn270.PNG" alt="">무선 관리자
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="javascript:"> Profile</a></li>
+                                <li>
+                                    <a href="javascript:">
+                                        <span class="badge bg-red pull-right">50%</span>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li><a href="javascript:">Help</a></li>
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li-->
+
+                        <!--  우상단 관리자 아이콘 풀다운 메뉴 꾸미기...
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">6</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="text-center">
+                                        <a>
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">  <!-- 오른쪽 전체를 지칭 -->
+            <!-- 여기까진 모든 젠텔레라 페이지가 똑같다...-->
+
+            <!-- top tiles -->
+            <div class="row tile_count"> <!-- 최상단 카운터들 -->
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Download</span>
+                    <div class="count" id="A00">0</div>  <!-- A00 에 값 대입 -->
+                    <!--span><i class="fa fa-user"></i> Total Download Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Upload</span>
+                    <div class="count"  id="A01">0</div>
+                    <!--i class="fa fa-clock-o"></i> <span>Total Upload Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Trafic</span>
+                    <div class="count green" id="A02" >0</div>
+                    <!--i class="fa fa-user"></i> <span>Real Time Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Service Time</span>
+                    <div class="count" style="font-size:30px" id = "A03" >0</div>
+                    <!--i class="fa fa-clock-o"></i><span> Operation Time</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Operating Rate</span>
+                    <div class="count" id= "A04">0</div>
+                    <i id="A04rate" class="green">34%</i>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Registration Equipment</span>
+                    <div class="count" id= "A05"></div>
+                    <!--i class="fa fa-user"></i> <span>Registration Equipment</span-->
+                </div>
+
+            </div>    <!-- 우측공간 최상단 카운터들 -->
+            <!-- /top tiles -->
+            <hr/>    <!-- 우측공간 최상단 카운터들 -->
+            <!-- /top tiles -->
+            <!-- 블럭을 shrink 한줄만 copy 해오면 되네.. 블럭을 인식하는건 역시 this is webstorm !!
+            <div class="">  <!-- 우측공간 최상단 카운터 아래쪽 공간 정의 -->
+            <div class="page-title">
+                <div class="title_left">
+                    <!-- 파파 아이콘 사용 -->
+                    <h3><i class="fa fa-cogs" aria-hidden="true"></i> Field Management</i></h3>
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <!--div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+
+                      <button class="btn btn-default" type="button" onclick="top_go_button_click();">Go!</button>
+                    </span>
+                        </div-->
+                    </div>
+                </div>
+            </div>  <!-- 테이블 감싸고 제품과 오른쪽 더비 써치 & Go -->
+
+            <div class="clearfix"></div>
+            <div class="clearfix"></div>
+
+            <div class="row"> <!-- 우측 공간에서 row 하나 만든다. -->
+                <!-- xs < 768 | sm > 768 | md > 992 | lg > 1200
+<div id="show_file" class="col-md-6"
+ 부트스트랩 정의 ::  컨테이너 너비   auto   |   750px  |   970px  |   1170px -->
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel" style="align:center; height:100% ">
+                        <div class="x_title">
+                            <h2>Indoor Management</h2><div style="float:right;"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content" style="align:center;">
+
+                            <div class='mainwindow'style="width:100%;height:1000px">
+
+                                <div class='nav1'>
+                                   <a><input type="file" id="files"name="files[]" style="display: none;" ></a><button onclick="trgfile()" align="center">Select Img</button>
+
+
+                                    <h2>&nbsp&nbspList of IMG</h2>
+                                    <ul>
+<!--리스트 여기다가넣기-->
+                                        <!--li onclick="load(this)" onmousedown="edable(this)"><a><strong>1A.png</strong></a></li-->
+                                    </ul>
+
+                                    <output id="listed"></output>
+                                </div>
+                                <div class='right-box'>
+                                    <div><input type="button" value=" Add AP" onclick="newmake(1,0,0)">
+                                        <input type="button" value="Save Status"onclick="saveimg()"id="save">
+                                        <a href="#" class="class-with-tooltip"><img src="images/que.png"></a>
+                                    <!--input type="button" value="에러"onclick="del('00:06:7A:40:04')"></div-->
+                                    <!--input type="button" value="저장"onclick="del()"-->
+                                      <hr><!--div-- style="float: left;width:50px;height:1000px;"></div--> <span id="board"></span>
+<!--이미지 여기다가 넣기-->
+                                        <!--img style="display:none"class="thumb" src="parkingimage/1A.png" title="1A.png"id="1A.png1"/-->
+                                        <output id="list"></output>
+
+                                        <hr>
+
+
+                                </div></div>
+                        </div>
+                    </div>
+                </div> <!-- 체빡 영역 -->
+            </div> <!-- 우측 공간에서 row 하나 만든다. --> <!-- 반응형 체크때문에 남겨둔 코드 -->
+
+        </div>  <!-- 오른쪽 전체 끝 -->
+
+    </div>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+        <div class="pull-right">
+            uManager version 3.3 ----- <a href="http://www.jmpsys.com">JMPSYSTEMS Co., Ltd.</a>
+        </div>
+        <div class="clearfix"></div>
+
+    </footer>
+    <!-- /footer content -->
+
+    </div></div></body>
+
+
+<!-- Custom Theme Scripts -->
+
+
+<script src="../vendors/jQuery-contextMenu-master/dist/jquery.contextMenu.js"></script>
+<script src="../vendors/jQuery-contextMenu-master/dist/jquery.ui.position.js"></script>
+<script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/mar10/jquery-ui-contextmenu@v1/jquery.ui-contextmenu.min.js"></script>
+<script src="../build/js/custom.min.js"></script>
+<script src="../vendors/d3/d3.min.js"></script>
+<script src="../vendors/DateJS/build/date.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script language="JavaScript">
+    var logo=new Array()
+    var bootimg='images/bootnow.png'
+    var normalimg='images/normal.png'
+    var errorimg='images/error.png'
+    var unregimg='images/error.png'
+    var unreportimg='images/umreport.png'
+    var symbolOne = {
+        path: 'M -2,0 0,-2 2,0 0,2 z',
+        strokeColor: '#F00',
+        fillOpacity: 0.2,
+        strokeOpacity: 0.2,
+        scale:5,
+        size:100
+    };
+    var loading = new Array();
+var exmakevalue=[]
+    var recentpage
+    var jjj = 0;
+    for(var v in exmakevalue){
+        exmake(v)
+
+    }
+    function exmake(v){
+        logo[jjj] = new Array()
+        loading[jjj]="loading"
+        var img = document.createElement('img');
+        img.ondblclick = function () {
+            asd = prompt("아이디 입력", logo[this.id][5]);
+            //console.log(this.id)
+            loading[this.id]="loading"
+            // console.log(asd)
+            if (asd==null){
+            }else{
+                logo[this.id][5]=asd;
+            }
+        };
+        img.onmouseup = function (e) {
+          if(e.which==3){
+              handlemouse(this)
+          }
+
+
+        };
+
+        if (exmakevalue[v][0] == 1) {
+            img.src = unreportimg;
+        } else if (exmakevalue[v][0] == 2) {
+            img.src = 'images/alert.png';
+        }
+        img.title = "ID 확인중..."//[j][5]랑 온거랑 비교해서 뙇
+        img.className = 'drag';//필수
+        img.name=exmakevalue[v][3]
+        img.id =jjj
+        img.style.display='none'
+        logo[jjj][0] = exmakevalue[v][0]; //아이콘모양
+        logo[jjj][1] = exmakevalue[v][1]; //x좌표
+        logo[jjj][2] = exmakevalue[v][2]; //y좌표
+        logo[jjj][3] = img.name; //페이지와 연동
+        logo[jjj][4] = jjj;     //배열 몇번째인지 바악
+        logo[jjj][5] = exmakevalue[v][4]   //입력받은 맥
+        jjj++;
+        console.log(img.style.left = exmakevalue[v][1] + "px")
+        console.log(img.style.top = exmakevalue[v][2] + "px")
+        document.getElementById('board').appendChild(img); // board DIV 에 이미지 동적 추가
+
+    }
+    function newmake(i,k,l,mac){
+        loading[jjj]="loading"
+        // alert(mac)
+        if(typeof(mac)=="undefined") {
+            var mac1 = prompt("관리자에게 문의 요망")
+            if (mac1==null){
+
+            }else if(mac1.length!=17){
+                alert("잘못된 입력입니다.")
+            }
+            else {
+                if (typeof(recentpage) != "undefined") {
+                    logo[jjj] = new Array()
+                    console.log(recentpage)
+                    var img = document.createElement('img'); // 이미지 객체 생성
+                    img.ondblclick = function () {
+                        asd = prompt("아이디 입력", logo[this.id][5]);
+                        logo[this.id][5] = asd;
+                        loading[logo[this.id]]="loading"
+                    }; // 이미지를 클릭하면 제거되는 onclick 함수 생성
+                    img.onrightlclick = function () {
+                        console.log(logo[this.id][5])
+                    };
+                    if (i == 1) {
+                        img.src = unreportimg
+                    } else if (i == 2) {
+                        img.src = 'images/alert.png';
+                    }
+                    if (k == 0) {
+                        k = 545;
+                        l = 13;
+                    }
+                    console.log(jjj)
+                    img.title = "ID 확인중..."//[j][5]랑 온거랑 비교해서 뙇
+                    img.className = 'drag';//필수
+                    img.name = recentpage
+                    img.id = jjj
+                    var logoinput = i + "," + k + "px," + l + "px," + img.name
+                    logo[jjj][0] = i; //아이콘모양
+                    logo[jjj][1] = k; //x좌표
+                    logo[jjj][2] = l; //y좌표
+                    logo[jjj][3] = img.name; //페이지와 연동
+                    logo[jjj][4] = jjj;     //배열 몇번째인지 바악
+                    logo[jjj][5] = mac1   //입력받은 맥
+                    console.log(logo)
+                    jjj++;
+                    console.log(img.style.left = k + "px")
+                    console.log(img.style.top = l + "px")
+                    document.getElementById('board').appendChild(img); // board DIV 에 이미지 동적 추가
+                }
+            }
+        }
+    }
+    function unreg(){
+        for(m in loading){
+            if(loading[m]=="loading"){
+                document.getElementById(m).title="등록되지 않은 장비"
+                document.getElementById(m).src=unregimg //여기에 비등록 아이콘
+            }
+        }
+    }
+    function del(mac){
+        for(m in logo){
+            if(logo[m][5]==mac){
+                loading[m]="done"
+                console.log(document.getElementById(m).src=errorimg) //여기에 에러아이콘
+                console.log(document.getElementById(m).title='장비 에러 -'+mac+'-\n연결을 확인하세요.')
+                //document.getElementById(m).style.display='none'
+            }
+        }
+    }
+    function show(mac,flag,title){
+        var i=0;
+        var j=0;
+        for(m in logo){
+            if(logo[m][5]==mac){
+                if(flag=="0"){
+                    console.log(document.getElementById(m).src=normalimg) //플래그 정상일때 와이파이 이미지
+                    document.getElementById(m).title=title
+                    //alert(flag)
+                    //document.getElementById(m).style.display='none'
+                    loading[m]="done"
+                }else if(flag=="1"){
+                    console.log(document.getElementById(m).src=bootimg) //부팅이미지
+                    document.getElementById(m).title="장비가 조금 전 부팅함"
+                }
+
+            }
+            j+=logo[m][5].indexOf(mac)
+            //console.log(j+=logo[m][5].indexOf(mac),i)
+           // console.log(mac)
+            i++
+        }
+        if(i*(-1)==j){
+            console.log("등록됬지만 맵에 입력 x",mac)
+        }
+
+    }
+
+</script>
+<script>
+    for(var f=0;f<table;f++) {
+        document.write('<hidden id = "first"  class="base"></hidden>');
+        var rec = "first"+(f);
+        document.getElementById("first").id = rec;
+        var a= document.getElementById(rec);
+        document.getElementById("A05").innerHTML=table;
+        if(array1[f]==null){
+            document.getElementById(rec).className="Loading";
+        }
+    }
+    console.log(table)
+
+</script>
+<!--웹소켓-->
+<script>
+
+
+
+    /*function ws_close(){
+     ws.close();
+     }
+     var checkUnload = true;
+     $(window).on("afterunload", function(){
+     if(checkUnload) return ws_close();
+     });
+     */
+    //var nStart = new Date().getTime(); //html 켜진 시간
+    for(var s=0;s<table;s++){
+        eval("stat"+s+"=new Array();");
+        eval("test_compare"+s+"=new Array();");
+    }
+    //var stat0=new Array();
+    //stat0,stat2.......  총 40개의 배열 생성 여기다가 상태넣을거.
+    var bootstring=[];
+    var macstring=[];
+    var ipstring=[];
+    var comparetime=[];
+    var statusstring=[];
+    var savetime=[];
+    var uploadstring=[];
+    var downstring=[];
+    var upload=[];
+    var download=[];
+    var per_minute = [];
+    var per_minute1 = [];
+    var realtx=[];
+    var realrx=[];
+    var atach=[];
+    var model=[];
+    var websocsend=[];
+
+    var uptotal;
+    var downtotal;
+    var spend_time;
+    var string;
+    var cross=1;
+
+
+    window.onload = function()
+    {
+
+        // Web Socket is connected, send data using send()
+        setTimeout(function(){ws.send("piping");}, 100);
+        console.log("핑핑");
+        //var myTextArea = document.getElementById("textarea1");
+        // myTextArea.value = myTextArea.value + "\n" + "First message sent";
+        //textarea1.scrollTop = textarea1.scrollHeight;
+        console.log(table);
+    };
+    ws.onmessage = function (evt)
+    {
+        {
+            //console.log(evt.data);
+            spend_time_start=evt.data.lastIndexOf(';');
+            spend_time=evt.data.substr(spend_time_start+2);
+            spend_timeR=spend_time.split("[]");
+            spend_time=spend_timeR[0];
+            ////tttt=spend_timeR[1];
+            //testtest(tttt)
+            //console.log(tttt);
+            string = evt.data.split(';');
+            //바로가면 안되고 특정문자 기준으로 배열로 나눠서 뿌려준다.
+            setTimeout(function(){ws.send("piping");}, 100);
+            var err=$('.flag5').length;
+            var notyet=$('.base').length;
+            var und=$('.Loading').length;
+            var wait=$('.flag4').length;
+            work=table-err-notyet-wait-und.toString();
+            total=table-und.toString();
+            document.getElementById("A04").innerHTML=work+" / "+total;
+            if (string!=""&&evt.data.indexOf("table:")==-1) {
+                web_soc_html();
+            }
+        }
+    };
+    function web_soc_html(){
+        //console.log(spend_time);//서버 열린 시간(초)
+        var clocks=Math.floor(spend_time%60);
+        var minutes=Math.floor(spend_time/60);
+        var hours=Math.floor(minutes/60);
+        var day=Math.floor(hours/24);
+        /*if(minutes%120==0){ //2시간마다 한번씩 새로고침
+         setTimeout(function() {
+         window.location.reload(true);
+
+         },1000*60*2)
+         }*/
+        var string_time=minutes+"분";
+        if (minutes>59){
+            minutes=minutes%60;
+            string_time=hours+"시간 "+minutes+"분";
+            if(hours>23)
+            {
+                hours=hours%24;
+                string_time=day+"일 "+hours+"시간 "+minutes+"분";
+            }
+
+        }
+        //console.log(string_time)
+        document.getElementById("A03").innerHTML=string_time;
+        document.getElementById("A03").title=clocks+"초";
+        string.splice(string.length - 1, 1);
+        var getstringlength=string.length;
+        for(j=1;j<getstringlength;j++) {
+            string[j] = string[j].substr(1);
+        }
+        //console.log(string); //맥과 부트가 붙어있는 스트링
+        for(i=0;i<getstringlength;i++) {
+            var bootstart=string[i].indexOf("부:");
+            bootstring[i] = string[i].substr(bootstart+2, 1);
+            //console.log(bootstring);
+            var macstart=string[i].indexOf("맥:");
+            macstring[i]=string[i].substr(macstart+2,17);
+            //console.log(macstring);
+            var ipstart=string[i].indexOf("아:");
+            var ipend=string[i].lastIndexOf("컴:");
+            ipstring[i]=string[i].substr(ipstart+2,ipend-ipstart-3);
+            //console.log(ipstring);
+            var compstart=string[i].indexOf("컴");
+            var compend=string[i].lastIndexOf("상태:");
+            comparetime[i]=string[i].substr(compstart+2,compend-compstart-3);
+            //console.log(comparetime);
+            statusstring[i]=string[i].substr(compend+3); //ap트래픽
+            var upstart=string[i].indexOf("전송:");
+            var upend=string[i].indexOf("수신:");
+            uploadstring[i]=string[i].substr(upstart+4,upend-upstart-6);//사용자가 다운로드
+            var downstart=string[i].indexOf("수신:");
+            var downend=string[i].indexOf("실전:");
+            downstring[i]=string[i].substr(downstart+4,downend-downstart-6);//사용자가 업로드
+            var realtxend=string[i].indexOf("실수:");
+            realtx[i]=string[i].substr(downend+4,realtxend-downend-6)
+            var realrxend=string[i].indexOf("붙맥:");
+            realrx[i]=string[i].substr(realtxend+4,realrxend-realtxend-6)
+
+            var atachstart=string[i].indexOf("모델:");
+            atach[i]=string[i].substr(realrxend+4,atachstart-realrxend-6)
+            var modelend=string[i].indexOf("온도:");
+            model[i]=string[i].substr(atachstart+4,modelend-atachstart-6)
+           // console.log(downstring[i])
+            // console.log(model[i],atach[i])
+
+            //console.log(downstring);
+            //console.log(statusstring)
+        }
+        //var nend = new Date().getTime();
+        //var spendtime=(nend-nStart)/1000;
+        //console.log(spendtime);
+        //alert(macstring.indexOf(array1[0])) //그 맥에해당하는 위치를 알려준다.
+        for(i=0;i<getstringlength;i++){
+            var inputhere="<h4> "+macstring[i]+" </h4>"+"\n"+"<h5>&nbsp"+ipstring[i]+"&nbsp\n"+"</h5>";
+            // console.log(inputhere);
+            for(j=0;j<table;j++){
+                if(macstring[i]==array1[j]){
+                    upload[j]=uploadstring[i];
+                    download[j]=downstring[i];
+                    //alert(i); 소켓에서 오는 배열 번호
+                    //alert(j); 그에 일치하는 화면 배열 번호
+                    savetime[j]=comparetime[i];
+                    eval("var pus=stat"+j);
+                    pus.unshift("\n"+statusstring[i]);
+                    if(pus.length>10){
+                        pus.pop();
+                    }
+
+                    if(bootstring[i]=="0"){
+                        document.getElementById('first'+(j)).className="flag0";
+                        document.getElementById("first"+(j)).title=pus;
+                        // alert("색바뀐당");
+                    }
+                    else if(bootstring[i]=="1"){
+                        document.getElementById('first'+(j)).className="flag1";
+                        document.getElementById('first'+(j)).title="플래그1";
+                    }
+                    else if(bootstring[i]=="2"){
+                        document.getElementById('first'+(j)).className="flag2";
+                        document.getElementById('first'+(j)).title="플래그2";
+                    }
+                    else if(bootstring[i]=="3"){
+                        document.getElementById('first'+(j)).className="flag3";
+                        document.getElementById('first'+(j)).title="플래그3";
+                    }
+                    else if(bootstring[i]=="4"){
+                        document.getElementById('first'+(j)).className="flag4";
+                        document.getElementById('first'+(j)).title="플래그4";
+                    }
+                    //console.log(pus)
+                    show(macstring[i],bootstring[i],pus);
+                    console.log(loading)
+                }
+            }
+            uptotal=0;
+            downtotal=0;
+            console.log(download)
+            for(j=0;j<table;j++){
+                if(upload[j]!=null) {
+                    uptotal += Number(upload[j]);
+                    downtotal+=Number(download[j]);
+                }
+            }
+        } //화면과 같은 맥과 부트 배열 위치 찾기
+
+
+        var cutup=String(uptotal);
+        var cutdown=String(downtotal);
+        var cutup1=uptotal;
+        var cutdown1=downtotal;
+        console.log(cutup,cutdown)
+        if (cutup1>1023){
+            cutup1=(cutup/1024).toFixed(1);
+            cutup=cutup1+"K"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"M"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"G"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1);
+            cutup=cutup1+"T"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown/1024).toFixed(1);
+            cutdown=cutdown1+"K"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"M"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"G"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1);
+            cutdown=cutdown1+"T"
+        }
+        /* if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"K"
+         cutup=cutup.substring(0,cutup.length-3)
+         console.log(cutup)
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"M"
+         cutup=cutup.substring(0,cutup.length-4);
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"G"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"T"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutdown.length>4){
+         cutdown=cutdown.substring(0,cutdown.length-3)+"K";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"M";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"G";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"T";
+         }*/
+        //부트플래그 넣어보자
+        var err=$('.flag5').length;
+        var notyet=$('.base').length;
+        var und=$('.Loading').length;
+        var oprate=Math.floor((table-err-notyet-und)*100/(table-und));
+        document.getElementById("A04rate").innerHTML=oprate+"%";
+        document.getElementById("A00").innerHTML=cutup;
+        document.getElementById("A00").title=AddComma(String(uptotal))+"byte";
+        document.getElementById("A01").innerHTML=cutdown;
+        document.getElementById("A01").title=AddComma(String(downtotal))+"byte";
+        var work=table-err-notyet-und.toString();
+        var total=table-und.toString();
+        document.getElementById("A04").innerHTML=work+" / "+total;
+    }
+
+    function AddComma(data_value) {
+        return Number(data_value).toLocaleString('en');
+    }
+    setInterval(function() {
+        if (uptotal != null) {
+            per_minute.unshift(uptotal+downtotal);
+            if (per_minute.length > 15) {
+                per_minute.pop();
+            }
+            //console.log(per_minute)
+            per_minute1.unshift(downtotal);
+            if (per_minute1.length > 15) {
+                per_minute1.pop();
+            }
+            //console.log(per_minute1);
+
+            if (per_minute.length > 10) {
+                var minute = (per_minute[0] - per_minute[9])/10;
+                minute=Math.ceil(minute);
+                minute1=minute+"B";
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"K";
+                }
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"M";
+                }
+                if (minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"G"
+                }
+                if (minute<0){}else{
+                    document.getElementById("A02").innerHTML = minute1;
+                }
+                document.getElementById("A02").style="cursor:default";
+                //console.log(per_minute, minute);
+            }
+            else {
+                document.getElementById("A02").innerHTML = "Loading...";
+                document.getElementById("A02").style="cursor:wait";
+            }
+        }
+    },1000);
+
+    setTimeout(function(){
+        setInterval(function(){
+            for(i=0;i<table;i++) {
+                eval("var pus=test_compare"+i)
+                pus.push(savetime[i]);
+                start_pus=pus.indexOf();
+                last_pus=pus.lastIndexOf(!null);
+                // console.log(pus,start_pus,last_pus,i);
+                if(pus[0]==pus[1]){
+                    if(document.getElementById('first'+(i)).className!="Loading") {
+                        document.getElementById('first' + (i)).className = "flag5";
+                        document.getElementById('first'+(i)).title="No response From Ap";
+                        websocsend.push(" "+array1[i]);
+                        del(array1[i])
+                        //var asdfeg=array1[i];
+                        //ws.send(asdfeg)
+
+
+                    }
+                }
+                if(pus.length>2){
+                    pus.shift();
+                }
+            }
+            console.log(websocsend);
+            send_soc();
+            unreg();
+            console.log(websocsend);
+        },1000*30); //5분
+
+    },30000);
+
+
+    function send_soc(){
+        setTimeout(function(){ws.send("errmac "+websocsend);}, 100);
+        setTimeout(function(){ websocsend=[];}, 1000*2);
+    }
+
+    /*
+     setInterval(function(){
+     window.location.reload(true);
+     },1000*60*60*1); //1시간마다 한번씩 리프레쉬
+     */
+
+    /* 장비가 죽었는지 확인하는 방법 1)
+     setInterval(function(){
+     for(i=0;i<table;i++)
+     savetime1[i]=savetime[i];
+     console.log(savetime1,"CCCCC"); //N초마다 savetime1에 저장.
+     setTimeout(function() {
+     for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     if(document.getElementById('first'+(i)).className!="Loading") {
+     document.getElementById('first' + (i)).className = "flag5";
+     }
+     }
+     }
+     console.log(savetime1,"AAAAAAAA");
+     console.log(savetime,"BBBBBBBB");
+     }, 1000*60*2);
+     },1000*60*10);
+
+     */
+
+
+    /*for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     document.getElementById('first'+(i)).className="flag5";
+     }
+     }
+     console.log(savetime1);
+     console.log(savetime);*/
+
+
+
+</script>
+
+<!--<button id="addItemBtn">장비 추가</button>-->
+
+<script>
+    var savedimg=[];
+    var savedimgname=[];
+    /*var elems=document.getElementsByClassName('thumb')
+    console.log(document.getElementById("files"))
+    for(var i=0;i<elems.length;i++){
+        //console.log(elems[i].src);
+        //console.log(elems[i].title)
+        savedimg.push(elems[i].src)
+        savedimgname.push(elems[i].title)
+    }
+    */
+
+    function saveimg(){
+        var sendlo  =""
+        var sendimg  =""
+        var sendimgname=""
+        //console.log(savedimg[0]);
+        // console.log(savedimgname)
+        //  console.log(logo)
+        for(var i in logo){
+            if(typeof(logo[i][0])!="undefined")
+            sendlo+="['"+logo[i][0]+"','"+logo[i][1]+"','"+logo[i][2]+"','"+logo[i][3]+"','"+logo[i][5]+"'],"
+        }
+        for(var i in savedimg){
+            deletestring=savedimg[i].split(",")
+            //deletestring=deletestring[1].replace("+","최건영") //;가 url타고가면  멈추니까 사라진다
+            sendimg+=deletestring[1]+","
+            sendimgname+=savedimgname[i]+","
+        }
+        sendlo="["+sendlo+"]"
+        console.log(sendlo)
+        sendimg=sendimg.replace(/\+/g,"최건영");
+       console.log(sendimg)
+        console.log(sendimgname)
+//<div><img class="thumb" style="display:none;vertical-align: middle"title="파일네임.png"id="파일네임.png1"src=""/></div>
+       console.log(sendimg)
+        // console.log(sendlo)
+       var asdasd= confirm("설정 값 변경 시 정상동작 하지 않을 수 있습니다. \n진행하시겠습니까?.")
+        //alert(asdasd)
+        if (asdasd){
+            setTimeout(function(){ showopen=window.open("http://" + server_url + ":8080/indoor?logo="+sendlo+"&imgdata="+sendimg+"&imgname="+sendimgname,"1","width=480,height=600,toolbar=no,location=no,status=no,left=250,top=" + i*24); setTimeout(function(){ showopen.close();location.href="indoor.html";}, 1000);}, 500);
+
+        }
+      //+"&img="+deletestring+""
+
+
+    }
+    function makehidden(e){
+        document.getElementsByName("hidden").style.display="none";
+    }
+    function makehidden1(e){
+        document.getElementsByName("hidden").style.display="";
+    }
+    //document.getElementById("files").title="이미지 파일 선택";
+    var eeee
+    function edable(e){
+        eeee=e
+        edablearr=e.innerHTML.split('</strong>')
+        deablearr=edablearr[0].split('<strong>');
+        console.log(deablearr[1])
+    }
+    function load(e){
+        console.log(e.innerHTML)
+        var elems = document.getElementsByClassName('thumb');
+
+        array11=e.innerHTML.split('</strong>')
+        array11=array11[0].split('<strong>');
+        console.log(array11[1])
+        for (var i=0;i<elems.length;i+=1){
+            elems[i].style.display = 'none';
+        }
+        var elems1=document.getElementsByClassName("drag");
+        var elems2=document.getElementsByName(array11[1]+"1");
+        console.log(elems1)
+        for (var i=0;i<elems1.length;i+=1){
+            elems1[i].style.display = 'none';
+        }
+        for(var i=0;i<elems2.length;i++){
+            elems2[i].style.display=''
+        }
+        console.log(array11[1]+"1")
+        //document.getElementsByClassName("thumb").style.display="none"
+        document.getElementById(array11[1]+"1").style.display=""
+        recentpage=array11[1]+"1"
+    }
+    var output = [];
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+            q=f.name
+           // console.log(f)
+            output.push('New! <li onclick="load(this)" onmousedown="edable(this)"><a><strong>', (f.name), '</strong></a></li>');
+            // Only process image files.
+            if (!f.type.match('image.*')) {
+                continue;
+            }
+            var reader = new FileReader();
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    // Render thumbnail.
+                    var span = document.createElement('div');
+                    span.innerHTML = ['<img style="display:none"class="thumb" src="', e.target.result,
+                        '" title="', theFile.name, '"id="',theFile.name,'1"/>'].join('');
+                   //console.log(e.target.result)
+                    document.getElementById('list').insertBefore(span, null);
+                    deletestring=e.target.result
+                    filename=theFile.name+"1"
+                    console.log(filename)
+                    console.log(document.filename)
+
+                    savedimg.push(deletestring)
+                   // console.log(deletestring)
+                    savedimgname.push(theFile.name)
+                };
+            })(f);
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+        document.getElementById('listed').innerHTML = '<ul>' + output.join('') + '</ul>';
+    }
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
+
+<script type="text/javascript">
+
+    var dragobject={
+        z: 0, x: 0, y: 0, offsetx : null, offsety : null, targetobj : null, dragapproved : 0,
+        initialize:function(){
+            document.onmousedown=this.drag
+            document.onmouseup=function(){this.dragapproved=0}
+        },
+        drag:function(e){
+            var evtobj=window.event? window.event : e
+            this.targetobj=window.event? event.srcElement : e.target
+            if (this.targetobj.className=="drag"){
+                this.dragapproved=1
+                if (isNaN(parseInt(this.targetobj.style.left))){this.targetobj.style.left=0}
+                if (isNaN(parseInt(this.targetobj.style.top))){this.targetobj.style.top=0}
+                this.offsetx=parseInt(this.targetobj.style.left)
+                this.offsety=parseInt(this.targetobj.style.top)
+                this.x=evtobj.clientX
+                this.y=evtobj.clientY
+                console.log( this.offsetx,this.offsety,this.targetobj.id)
+                if (evtobj.preventDefault)
+                    evtobj.preventDefault()
+                document.onmousemove=dragobject.moveit
+            }
+        },
+        moveit:function(e){
+            var evtobj=window.event? window.event : e
+            if (this.dragapproved==1){
+                this.targetobj.style.left=this.offsetx+evtobj.clientX-this.x+"px"
+                this.targetobj.style.top=this.offsety+evtobj.clientY-this.y+"px"
+                // console.log(this.x,this.y,this.targetobj.id)
+                console.log(  this.targetobj.style.left,this.targetobj.style.top,this.targetobj.name,this.targetobj.id)
+                logo[this.targetobj.id][1]=this.offsetx+evtobj.clientX-this.x;
+                logo[this.targetobj.id][2]=this.offsety+evtobj.clientY-this.y;
+                return false
+            }
+        }
+    }
+
+    dragobject.initialize()
+
+    window.addEventListener("resize", myFunction);
+    function myFunction() {
+        window.resizeTo(1550, 750);
+    }
+    function mapinfo(){
+        showopen=window.open("http://" + server_url + ":8080/maploc","nodeok","menubar=0 width=1, height=1");
+        setInterval(function() {
+            showopen.close();
+            location.href="mapmak.html";
+        },1000);
+    }
+    $("li").mouseover(function(){
+        $("p").css("background-color", "yellow");
+    });
+    function delimg(e){
+console.log(eeee.innerHTML="")
+        confirm(deablearr[1]+"를 삭제합니다.");
+        showopen=window.open("http://" + server_url + ":8080/indoor?delimg="+deablearr[1],"1","width=480,height=600,toolbar=no,location=no,status=no,left=250,top=" + i*24);
+        for(var i in logo){
+            console.log(logo[i][3])
+            if(deablearr[1]+"1"==logo[i][3])
+                console.log(logo[i]="")
+        }
+        console.log(logo)
+        setTimeout(function(){saveimg()}, 1000);
+    }
+
+    var enableweb="stop";
+    function trgfile(){
+        $('#files').trigger('click');
+    }
+    $(function(){
+
+        $(document).contextmenu(
+            {
+                delegate: "li",
+                preventContextMenuForPopup: true,
+                preventSelect: true,
+                taphold: true,
+                menu: [
+                    {title: "Enable", cmd: "func1",disabled: true},
+                    {title: "Disable", cmd: "func2"},
+                   // {title: "", cmd: "func3",disabled: true},
+                    {title: "-----"},
+                    {title: "Delete", cmd: "func4" },
+                    //  {title: "Paste <kbd>Ctrl+V</kbd>", cmd: "paste1", uiIcon: "ui-icon-clipboard", disabled: true },
+                    //    {title: "----"},
+                    //{title: "Developing", cmd: "func3"},
+                    /*{title: "More", children: [
+                     {title: "Use an 'action' callback", action: function(event, ui) {
+                     alert("action callback sub1");
+                     } },
+                     {title: "Tooltip (static)", cmd: "sub2", tooltip: "Static tooltip"},
+                     {title: "Tooltip (dynamic)", tooltip: function(event, ui){ return "" + Date(); }},
+                     {title: "Custom icon", cmd: "browser", uiIcon: "ui-icon custom-icon-firefox"},
+                     {title: "Disabled (dynamic)", disabled: function(event, ui){
+                     return false;
+                     }}
+                     ]}
+                     */
+                ],
+
+                // Handle menu selection to implement a fake-clipboard
+                select: function(event, ui) {
+                    var $target = ui.target;
+                    switch(ui.cmd){
+                        case "func1":
+
+                            break;
+                        case "func2":
+
+                            break;
+                        case "func3":
+
+                            break;
+                        case "func4":
+                            delimg(this);
+
+                    }
+                    clickedmac=""
+                },
+                // Implement the beforeOpen callback to dynamically change the entries
+                beforeOpen: function(event, ui) {
+                    var $menu = ui.menu,
+                        $target = ui.target,
+                        extraData = ui.extraData; // passed when menu was opened by call to open()
+
+                    // console.log("beforeOpen", event, ui, event.originalEvent.type);
+
+                    $(document)
+                    //        .contextmenu("replaceMenu", [{title: "aaa"}, {title: "bbb"}])
+                    //        .contextmenu("replaceMenu", "#options2")
+                    //        .contextmenu("setEntry", "cut", {title: "Cuty", uiIcon: "ui-icon-heart", disabled: true})
+                        .contextmenu("enableEntry", "func3")
+                        .contextmenu("enableEntry", "func2")
+                       // .contextmenu("enableEntry", "func1", (enablesys !== "stop"));
+                    // Optionally return false, to prevent opening the menu now
+                }
+            });
+
+
+    });
+    function func3(){
+        console.log(this.innerHTML)
+    }
+    function mapinfo(){
+        showopen=window.open("http://" + server_url + ":8080/maploc","nodeok","menubar=0 width=1, height=1");
+        setInterval(function() {
+            showopen.close();
+            location.href="mapmak.html";
+        },1000);
+    }
+    function LockF5() {
+        if (event.keyCode == 116) {
+            event.keyCode = 0;
+            return false
+        }else if(event.keyCode==13&&event.ctrlKey){
+            // aka+='<br>'
+            console.log("컨트롤 엔터")
+            return false
+        }else if(event.ctrlKey&&event.keyCode==83){
+            $('#save').trigger('click');
+            return false
+        }
+        console.log(event.keyCode)
+    }
+    document.onkeydown = LockF5;
+    function handlemouse(e){
+       a= confirm("장비 웹페이지로 이동하시겠습니까?")
+        if (a==true){
+            //alert(logo[e.id][5])
+            showopen=window.open("http://" + server_url + ":8080/mactoweb?macnum="+logo[e.id][5],"nodeok","menubar=0 width=1, height=1");
+            setInterval(function() {
+                showopen.close();
+            },1000);
+       }else{
+            alert("취소")
+        }
+
+    }
+
+</script>
+</html>
+<!-- 코드 보관소
+   map.center=new google.maps.LatLng(37, 127.1); //화면을 중앙에 놓기
+   $(document).ready(function(){
+   });
+    $(".delBtn").live("click", function(){
+  //클래스가 delBtn인게 눌렸을 때 함수 실행
+        });
+    $("#result10").click(function(){
+  //얘는 아이디가 이거인애가 눌렸을 때.
+        });
+
+   //marker.setIcon('https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png')
+      마커 변경
+
+       function animateCircle(line) {
+          var count = 0;
+          window.setInterval(function() {
+            count = (count + 1) % 200;
+
+            var icons = line.get('icons');
+            icons[0].offset = (count / 2) + '%';
+            line.set('icons', icons);
+        }, 20);
+      }
+indoorend
+-->

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+</head>
+<style>
+    .link {
+        fill: none;
+        stroke: #33f;
+        stroke-width: 1.0px;
+    }
+    text {
+        font: 11px sans-serif;
+        pointer-events: none;
+    }
+    .hi circle{
+        fill: #8e2;
+        stroke: #fff;
+        stroke-width: 1px;
+    }
+
+</style>
+<body style="align:center;height: 500px; background-color:white;">
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+<script>
+    var indexmacaddr="00:06:7A:05:04:97;00:06:7A:20:26:BA;00:06:7A:05:04:91;table:3;end"
+    function loadDoc() {
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                myFunction(this);
+            }
+        };
+        req.open("GET", "sample.xml", true);
+        req.send();
+    }
+
+</script>
+<!-- 나중엔 D3.js 다운받아 로컬에 저장할것 -->

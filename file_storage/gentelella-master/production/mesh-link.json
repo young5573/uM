@@ -1,0 +1,13 @@
+{
+  "links": [
+    {"source": "M2", "target": "M6", "value": 1},
+    {"source": "M3", "target": "M4", "value": 1},
+    {"source": "M1", "target": "M4", "value": 1},
+    {"source": "M5", "target": "M3", "value": 1},
+    {"source": "M2", "target": "M3", "value": 1},
+    {"source": "M4", "target": "M5", "value": 1},
+    {"source": "M6", "target": "M1", "value": 1},
+    {"source": "M7", "target": "M2", "value": 1},
+    {"source": "M8", "target": "M1", "value": 1}
+  ]
+}

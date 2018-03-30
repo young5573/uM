@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {width:100%;} table, th, td {border: 1px solid black; border-collapse: collapse;	}
+        input {border:0px;text-align:center;}
+    </style>
+    <meta charset="UTF-8">
+    <title>{{.Modelname}}</title>
+</head>
+<body>
+
+
+
+<h3></h3>
+
+<h2>Network</h2>
+<div style="font-size:12pt; color:#ff0000;">{{.ReadDefaultFile}}</div>
+<table>
+   <div style="float:right">DHCP :  <input type="checkbox"id="dhcpbutton" value="Change Ip Mode" onchange="changedhcp()"></div>
+    <tr><th>DHCP</th><th id="dhcp" value="{{.Dhcp}}" >{{.Dhcp}}</th></tr>
+    <tr><th>Ipaddr</th><th><input type="text" id="ip" value="{{.Ipaddr}}"/> </th></tr>
+    <tr><th>Netmask</th><th><input type="text" id="netmask" value="{{.Netmask}}"/></th></tr>
+    <tr><th>Gateway</th><th><input type="text" id="gateway" value="{{.Gateway}}"/> </th></tr>
+    <tr><th>Dns</th><th><input type="text" id="dns" value="{{.Dns}}"/></th></tr>
+</table>
+<br/>
+<hr>
+<h2>Wireless</h2>
+    <div style="float:right">MeshRoot  <input type="checkbox" id="rootcheckbutton"onchange=" changerootmode()"> <input type="text" id="rootmode" value="{{.Rootmode}}"style="display: none;"/></div>
+<table>
+    <tr><th>Meshid</th><th><input type="text"id="mesh" value="{{.Meshid}}"/></th></tr>
+    <tr><th>Threshold</th><th><input type="text" id="hold" value="{{.Threshold}}"/></th></tr>
+</table>
+    <br/>
+    <hr>
+<tr><th>Model Name : {{.Modelname}}</th><button onclick="save()"style="float: right;">저장</button><br/><th>MacAddrs : {{.Mactag}}</th></tr>
+
+</body>
+<script>
+    var dhcpchk=document.getElementById("dhcp")
+    var rootcheck=document.getElementById("rootmode")
+    console.log(document.getElementById("dhcp"))
+    if(dhcpchk.innerHTML=="static"){
+        dhcpchk.innerHTML="OFF"
+        document.getElementById("dhcpbutton").checked=false
+        document.getElementById("ip").readOnly=false;
+        document.getElementById("ip").style.background = "#ffffff";
+        document.getElementById("netmask").readOnly=false;
+        document.getElementById("netmask").style.background = "#ffffff";
+        document.getElementById("gateway").readOnly=false;
+        document.getElementById("gateway").style.background = "#ffffff";
+        document.getElementById("dns").readOnly=false;
+        document.getElementById("dns").style.background = "#ffffff";
+    }else{
+        dhcpchk.innerHTML="ON"
+        document.getElementById("dhcpbutton").checked=true
+        dhcpchk.value="AUTO";
+        document.getElementById("ip").readOnly=true;
+        document.getElementById("ip").style.background = "#e5e5e5";
+        document.getElementById("netmask").readOnly=true;
+        document.getElementById("netmask").style.background = "#e5e5e5";
+        document.getElementById("gateway").readOnly=true;
+        document.getElementById("gateway").style.background = "#e5e5e5";
+        document.getElementById("dns").readOnly=true;
+        document.getElementById("dns").style.background = "#e5e5e5";
+    }
+    if(rootcheck.value=="0"){
+        document.getElementById("rootcheckbutton").checked=false
+    }else{
+        document.getElementById("rootcheckbutton").checked=true
+    }
+
+    function changerootmode(){
+
+        if(rootcheck.value=="0"){
+            rootcheck.value="1"
+        }else{
+            rootcheck.value="0"
+        }
+    }
+    function changedhcp(){
+
+        if(dhcpchk.innerHTML=="OFF"){
+            dhcpchk.value="AUTO"
+
+            dhcpchk.innerHTML="ON"
+            document.getElementById("ip").readOnly=true;
+            document.getElementById("ip").style.background = "#e5e5e5";
+            document.getElementById("netmask").readOnly=true;
+            document.getElementById("netmask").style.background = "#e5e5e5";
+            document.getElementById("gateway").readOnly=true;
+            document.getElementById("gateway").style.background = "#e5e5e5";
+            document.getElementById("dns").readOnly=true;
+            document.getElementById("dns").style.background = "#e5e5e5";
+        }else{
+            dhcpchk.value="1"
+            dhcpchk.value="static"
+            dhcpchk.innerHTML="OFF"
+            document.getElementById("ip").readOnly=false;
+            document.getElementById("ip").style.background = "#ffffff";
+            document.getElementById("netmask").readOnly=false;
+            document.getElementById("netmask").style.background = "#ffffff";
+            document.getElementById("gateway").readOnly=false;
+            document.getElementById("gateway").style.background = "#ffffff";
+            document.getElementById("dns").readOnly=false;
+            document.getElementById("dns").style.background = "#ffffff";
+        }
+    }
+    function save(){
+        var ip = document.getElementById("ip").value;
+        var netmask = document.getElementById("netmask").value;
+        var meshid= document.getElementById("mesh").value;
+        var hold =  document.getElementById("hold").value;
+        var ipmode =  document.getElementById("dhcpbutton").checked;
+        var rootmode = document.getElementById("rootcheckbutton").checked;
+        var gateway = document.getElementById("gateway").value;
+        var dns = document.getElementById("dns").value
+        var macTag = "{{.Mactag}}"
+        console.log(ip)
+        console.log(netmask)
+        console.log(meshid)
+        console.log(hold)
+        console.log(ipmode)
+        console.log(rootmode)
+        console.log(gateway)
+        console.log(dns)
+        window.open("savemeshconfig?macTag="+macTag+"&ip="+ip+"&netmask="+netmask+"&meshid="+meshid+"&hold="+hold+"&ipmode="+ipmode+"&rootmode="+rootmode+"&gateway="+gateway+"&dns="+dns,"_self")
+    }
+</script>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <META http-equiv="Expires" content="-1">
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="No-Cache">
+    <title>{{.XmlFilename}}</title>
+</head>
+<style>
+    .drag{
+        position:absolute;
+        cursor:hand;
+        z-index: 100;
+        text-align: center;
+    }
+    .link {
+        fill: none;
+        stroke: #33f;
+        stroke-width: 1.0px;
+    }
+    text {
+        font: 11px sans-serif;
+        pointer-events: none;
+    }
+    .hi circle{
+        fill: #8e2;
+        stroke: #fff;
+        stroke-width: 1px;
+    }
+</style>
+<body style="align:center;height: 500px; background-color:white;"onBlur="self.focus();"><!--script-- src="../vendors/jquery/dist/jquery.min.js"></script-->
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3 ;">
+
+    Your browser does not support the HTML5 canvas tag.</canvas>
+
+<p><h1>{{.XmlFilename}}</h1></p>
+<input type="button" value="위치 저장" onclick="save()"align="right">
+<input type="button" value="펌웨어 업데이트" onclick="save()"align="right">
+<span id="board"></span><br/>
+
+
+</body>
+<script>
+
+
+    var macx=new Object();
+    var macy=new Object();
+    var url = "{{.Url}}";
+    var Filename="{{.XmlFilename}}";
+    var Fullurl="http://"+url+":8100/gentelella-master/production/meshxml/"+Filename+".xml";
+    var ws = new WebSocket("ws://"+url+":8100/websocket");
+   // var Filename="sample.xml";
+    var Firstplace=true;
+    setInterval(function() {
+        loadDoc();
+    },2000);
+    function loadDoc() {
+        this.blur();
+        setTimeout(this.focus, 0);
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if(Firstplace==true){
+                    myFunction(this);
+                }else{
+                    drawFunction(this);
+                }
+
+            }
+        };
+
+        req.open("GET",Fullurl, true);
+        req.send();
+    }
+    ws.onmessage = function (evt)
+    {
+        if (evt.data.length<10)
+        {
+            return
+        }
+      // console.log(evt.data);
+        string=evt.data.split("/");
+     //   console.log(string.length)
+        for(i=0;i<string.length-1;i++){
+            //console.log(string[i]+"\n")
+            resultstring=string[i].split(",");
+            //console.log(resultstring.length)
+            for(l=0;l<resultstring.length-1;l++)
+            {
+                drawline(resultstring[l],resultstring[l+1])
+            //    console.log(resultstring[l]," to ",resultstring[l+1])
+            }
+            /*for(j=0;i<resultstring.length;j++)
+            {
+                //console.log(resultstring[j]," to ",resultstring[j+1])
+            }*/
+        }
+        //drawline(MAC[i].firstChild.data,HEADING[i].firstChild.data)
+    }
+    var exbuttonnum=0;
+    function myFunction(xml) {
+        var i;
+        var xmlDoc = xml.responseXML;
+        var MAC = xmlDoc.getElementsByTagName("MAC");
+        var ID = xmlDoc.getElementsByTagName("HEADING");
+        var EQLEN = xmlDoc.getElementsByTagName("Equip").length
+        var XLO = xmlDoc.getElementsByTagName("X");
+        var YLO = xmlDoc.getElementsByTagName("Y");
+        var HEADING = xmlDoc.getElementsByTagName("HEADING");
+        console.log(EQLEN)
+        exbuttonnum=EQLEN
+        for(var i = 0;i<EQLEN;i++){
+             //console.log(MAC[i].getAttribute('na'),MAC[i].firstChild.data,ID[i].getAttribute('na'),ID[i].firstChild.data)
+            newmake(XLO[i].firstChild.data,YLO[i].firstChild.data,HEADING[i].firstChild.data,MAC[i].firstChild.data)
+        }
+        Firstplace=false
+    }
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    var xx=0
+    var yy=0
+    //ctx.fillStyle = "black";
+    //ctx.fillRect(0, 0, c.width, c.height);
+    var img = new Image();   // Create new img element
+    img.src = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw==';
+
+    function drawFunction(xml) {
+        ctx.drawImage(img,0,0);
+        var i;
+        var xmlDoc = xml.responseXML;
+
+        var MAC = xmlDoc.getElementsByTagName("MAC");
+
+        //var ID = xmlDoc.getElementsByTagName("HEADING");
+        var EQLEN = xmlDoc.getElementsByTagName("Equip").length;
+        var XLO = xmlDoc.getElementsByTagName("X");
+        var YLO = xmlDoc.getElementsByTagName("Y");
+        var IP =  xmlDoc.getElementsByTagName("IP");
+        var HEADING = xmlDoc.getElementsByTagName("HEADING");
+        var LINKM = xmlDoc.getElementsByTagName("LINKM");
+        var WIFIMAC = xmlDoc.getElementsByTagName("WIFIMAC");
+
+        //console.log(EQLEN,exbuttonnum)
+        //console.log(exbuttonnum-EQLEN)
+        if((exbuttonnum-EQLEN)!=0)
+        {
+           // alert(exbuttonnum-EQLEN)
+            for(i=exbuttonnum;i<EQLEN;i++)
+              //  alert(MAC[i].firstChild.data)
+            newmake(XLO[i].firstChild.data,YLO[i].firstChild.data,HEADING[i].firstChild.data,MAC[i].firstChild.data)
+        }
+        ctx.clearRect(0, 0, c.width, c.height);
+        exbuttonnum=EQLEN;
+        //ctx.fillStyle = "black";
+        //ctx.fillRect(0, 0, c.width, c.height);
+        for(var i = 0;i<EQLEN;i++){
+          // console.log(MAC[i].firstChild.data,HEADING[i].firstChild.data,LINKM[i].firstChild.data)
+            imgset(MAC[i].firstChild.data,WIFIMAC[i].firstChild.data,IP[i].firstChild.data,LINKM[i].firstChild.data*1)
+            drawline(MAC[i].firstChild.data,HEADING[i].firstChild.data)
+        }
+    }
+    function newmake(k,l,mac,savemac){
+        console.log(savemac)
+        macx[mac]=k*1;
+        macy[mac]=l*1;
+
+        var img = document.createElement('button'); // 이미지 객체 생성
+        img.ondblclick=function(){
+            webgo(img)
+        }
+        img.style.width="100px";
+        img.style.height="50px";
+        img.style.borderRadius="15%"
+        //img.style.borderColor="white"
+        img.id=mac
+        //img.src="node.png"
+        if (k == 0) {
+            k = xx*1;
+            l = yy*1;
+            macx[mac]=k;
+            macy[mac]=l;
+            xx+=10;
+            yy+=5
+        }
+        img.name = savemac
+        img.className = 'drag';//필수
+        img.style.left = k + "px";
+        img.style.top = l + "px"
+
+        document.getElementById('board').appendChild(img); // board DIV 에 이미지 동적 추가
+
+    }
+
+
+    var dragobject={
+        z: 0, x: 0, y: 0, offsetx : null, offsety : null, targetobj : null, dragapproved : 0,
+        initialize:function(){
+            document.onmousedown=this.drag
+            document.onmouseup=function(){this.dragapproved=0}
+        },
+        drag:function(e){
+            var evtobj=window.event? window.event : e
+            this.targetobj=window.event? event.srcElement : e.target
+            if (this.targetobj.className=="drag"){
+                this.dragapproved=1
+                if (isNaN(parseInt(this.targetobj.style.left))){this.targetobj.style.left=0}
+                if (isNaN(parseInt(this.targetobj.style.top))){this.targetobj.style.top=0}
+                this.offsetx=parseInt(this.targetobj.style.left)
+                this.offsety=parseInt(this.targetobj.style.top)
+                this.x=evtobj.clientX
+                this.y=evtobj.clientY
+                //console.log( this.offsetx,this.offsety,this.targetobj.id)
+                if (evtobj.preventDefault)
+                    evtobj.preventDefault()
+                document.onmousemove=dragobject.moveit
+            }
+        },
+        moveit:function(e){
+            var evtobj=window.event? window.event : e
+            if (this.dragapproved==1){
+                this.targetobj.style.left=this.offsetx+evtobj.clientX-this.x+"px";
+                this.targetobj.style.top=this.offsety+evtobj.clientY-this.y+"px";
+                //console.log(this.x,this.y,this.targetobj.id);
+                macx[this.targetobj.id]=this.offsetx+evtobj.clientX-this.x;
+                macy[this.targetobj.id]=this.offsety+evtobj.clientY-this.y;
+                //console.log(  this.targetobj.style.left,this.targetobj.style.top,this.targetobj.name,this.targetobj.id)
+                return false
+            }
+        }
+    }
+    function webgo(e){
+        console.log(window.open("http://"+e.innerHTML.split('<br>')[0]))
+
+    }
+
+    dragobject.initialize()
+    function imgset(mac,wifimac,ip,power){
+        power1 = parseInt(power/10);
+
+        console.log(power1)
+       // console.log(mac,power)
+        setcolor=document.getElementById(wifimac);
+        if(power==1000){
+            setcolor.title="ROOT"
+            //return
+        }else if(power==1001){
+            setcolor.title="ERR"
+        }else{
+            setcolor.title="-"+power+"dBm"
+        }
+
+        var mactag=mac.substring(9,17)
+        var wifimactag=wifimac.substring(9,17)
+        //console.log(mactag)
+        setcolor.innerHTML=ip+"<br/>유선 : "+mactag+"<br/>무선 : "+wifimactag;
+         switch(power1) {
+         case 0  :    setcolor.style.background = '#F6CECE';break;
+         case 1  :    setcolor.style.background = '#F6CECE';break;
+         case 2  :    setcolor.style.background = '#F6CECE';break;
+         case 3  :    setcolor.style.background = '#F6CECE';break;
+         case 4  :    setcolor.style.background = '#F5A9A9';break;
+         case 5  :    setcolor.style.background = '#F5A9A9';break;
+         case 6  :    setcolor.style.background = '#F78181';break;
+         case 7  :    setcolor.style.background = '#F78181';break;
+         case 8  :    setcolor.style.background = '#B40404';break;
+             case 100 : setcolor.style.background = '#ffffff';break;
+             case 101 : setcolor.style.background = '#B40404';break;
+        // case 9  :    setcolor.style.background = '#B40404';break;
+         default :    setcolor.style.background = '#000000';break;
+      }
+      setcolor.style.fontSize="5px";
+         console.log(setcolor.innerHTML)
+         //setcolor.style.color="#F7FE2E"
+        // console.log(setcolor.style.textAlign="center")
+      //  setcolor.style.background="red"
+        ws.send("mesh")
+    }
+    var img = new Image();
+
+    function drawline(mac,mac2){
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = "http://"+url+":8100/gentelella-master/production/umanager_logo.PNG";
+       // console.log(macx[mac],macy[mac],macx[mac2],macy[mac2])
+        //console.log(mac,mac2)
+      //  console.log(power)
+        ctx.beginPath();
+       // alert(power)
+        ctx.moveTo(macx[mac]+20, macy[mac]+20);
+        ctx.lineTo(macx[mac2]+20, macy[mac2]+20);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+    }
+    function save(){
+        var sendstring="meshid="+Filename+"&data="
+        a=document.getElementsByClassName("drag")
+        for(i=0;i<a.length;i++){
+            sendstring+=a[i].name+","+macx[a[i].id]+","+macy[a[i].id]+"/"
+            console.log(a[i].id,macx[a[i].id],macy[a[i].id])
+        }
+        console.log(sendstring)
+      //  console.log("http://"+url+":8080/savemesh?"+sendstring)
+       window.open("http://"+url+":8080/savemesh?"+sendstring,"OK","menubar=0 width=450, height=150")
+      //  console.log(window.open("http://"+e.innerHTML.split('<br>')[0]))
+       // console.log(sendstring)
+       // console.log(a.length)
+      //  console.log(a)
+    }
+    document.onkeydown = LockF5;
+    function LockF5() {
+        if (event.keyCode == 116) {
+            event.keyCode = 0;
+            return false
+        }else if(event.keyCode==13&&event.ctrlKey){
+            // aka+='<br>'
+            console.log("컨트롤 엔터")
+            return false
+        }else if(event.ctrlKey&&event.keyCode==83){
+            save();
+            return false
+        }else if(event.keyCode==123){
+           // alert("관리자모드는 막혀있습니다.")
+            return false
+        }else if(event.keyCode==18){return false}
+        console.log(event.keyCode)
+    }
+
+
+</script>
+<!-- 나중엔 D3.js 다운받아 로컬에 저장할것 -->

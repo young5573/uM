@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+</head>
+<style>
+    .link {
+        fill: none;
+        stroke: #33f;
+        stroke-width: 1.0px;
+    }
+    text {
+        font: 11px sans-serif;
+        pointer-events: none;
+    }
+    .hi circle{
+        fill: #8e2;
+        stroke: #fff;
+        stroke-width: 1px;
+    }
+
+</style>
+<body style="align:center;height: 500px; background-color:white;">
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+<!-- 나중엔 D3.js 다운받아 로컬에 저장할것 -->
+    <script>
+        setInterval(function() {
+            test()
+        },10000);
+        // 나중엔 파일로 처리 : mesh-node
+        var value="hi";
+        var links1;  // 자기와 연결된 next node 를 죄다 나열하면 연결 그래프는 물론 mesh 노드들을 뽑아낼 수 있다
+
+
+        d3.json("nodMac.json",function(data){
+            links1=data.links;
+            var nodes = [];
+            console.log(links1,nodes);
+        // Compute the distinct nodes from the links. // 노드 리스트 뽑아내기
+        links1.forEach(function(link) {
+            link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+           // console.log(link.source);
+            link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+            //console.log(link.target);
+        });
+       /* nodes.forEach(function(link) {
+           // link.source = nodes[link.source] || (nodes[link.source] = {name: link.id});
+          //  console.log(link.source);
+          //  link.target = nodes[link.target] || (nodes[link.target] = {name: link.group});
+            //console.log(link.target);
+        });*/
+       console.log(nodes) // 디버그 문
+        var width = document.body.scrollWidth-20,
+            height =document.body.scrollHeight-20;
+        var force = d3.layout.force()
+            .nodes(d3.values(nodes))
+            .links(links1)
+            .size([width, height])
+            .linkDistance(120)  // 노드간 거리.. 나중에 산출된 node 수 고려하여 가변할 필요가 있음
+            .charge(-300)
+            .on("tick", tick)
+            .start();
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var link = svg.selectAll(".link")
+            .data(force.links())
+            .enter().append("line")
+            .attr("class", "link")
+
+        var node = svg.selectAll(".node")
+            .data(force.nodes())
+            .enter().append("g")
+            .attr("class", value)
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout)
+            .call(force.drag);
+
+        node.append("circle")
+            .attr("r", 10);  // 노드 원의 반지름
+
+        node.append("text")
+            .attr("x", 12)  //  text 관련
+            .attr("dy", ".35em")
+            .text(function(d) { return d.name; });
+
+        function tick() {
+            link
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node
+                .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        }
+
+        function mouseover() {
+            d3.select(this).select("circle").transition()
+                .duration(750)
+                .attr("r", 20);
+        }
+
+        function mouseout() {
+            d3.select(this).select("circle").transition()
+                .duration(750)
+                .attr("r", 10);
+        }
+        })
+
+        function test(){
+            d3.json("nodMac.json",function(data){
+                links1=data.links;
+                var nodes = [];
+                console.log(links1,nodes);
+                // Compute the distinct nodes from the links. // 노드 리스트 뽑아내기
+                links1.forEach(function(link) {
+                    link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+                    // console.log(link.source);
+                    link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+                    //console.log(link.target);
+                });
+                /* nodes.forEach(function(link) {
+                    // link.source = nodes[link.source] || (nodes[link.source] = {name: link.id});
+                   //  console.log(link.source);
+                   //  link.target = nodes[link.target] || (nodes[link.target] = {name: link.group});
+                     //console.log(link.target);
+                 });*/
+                //console.log(nodes) // 디버그 문
+                var width = document.body.scrollWidth-20,
+                    height =document.body.scrollHeight-20;
+                var force = d3.layout.force()
+                    .nodes(d3.values(nodes))
+                    .links(links1)
+                    .size([width, height])
+                    .linkDistance(120)  // 노드간 거리.. 나중에 산출된 node 수 고려하여 가변할 필요가 있음
+                  //  .charge(-300)
+                    .on("tick", tick)
+                    .start();
+                var svg = d3.select("body")
+                    .attr("width", width)
+                    .attr("height", height);
+                var node = svg.selectAll(".node")
+                    .data(force.nodes())
+                    //.enter().append("g")
+                    .attr("class", value)
+                    .call(force.drag);
+
+                var link = svg.selectAll(".link")
+                    .data(force.links())
+                   // .enter().append("line")
+                    .attr("class", "link")
+
+                function tick() {
+                    link
+                        .attr("x1", function(d) { return d.source.x; })
+                        .attr("y1", function(d) { return d.source.y; })
+                        .attr("x2", function(d) { return d.target.x; })
+                        .attr("y2", function(d) { return d.target.y; });
+                    node
+                        //.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+                }
+
+            })
+        }
+
+    </script>

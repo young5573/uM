@@ -1,0 +1,223 @@
+﻿
+
+
+<!DOCTYPE html> <html>	<html lang="en">
+<head>
+
+    <title>Document</title>
+
+
+    <script>
+
+        var table='{{.CHECKED}}'; //선택된 테이블 수 num_update
+        var gwarray='{{.Lan_gateway}}';
+        var macarray=new Array('{{.MacAddr1}}','{{.MacAddr2}}','{{.MacAddr3}}','{{.MacAddr4}}','{{.MacAddr5}}','{{.MacAddr6}}','{{.MacAddr7}}','{{.MacAddr8}}','{{.MacAddr9}}','{{.MacAddr10}}');
+        var id2garray=new Array('{{.SSID_2G1}}','{{.SSID_2G2}}','{{.SSID_2G3}}','{{.SSID_2G4}}','{{.SSID_2G5}}','{{.SSID_2G6}}','{{.SSID_2G7}}','{{.SSID_2G8}}','{{.SSID_2G9}}','{{.SSID_2G10}}');
+        var pass2garray=new Array('{{.WPAPSK_2G1}}','{{.WPAPSK_2G2}}','{{.WPAPSK_2G3}}','{{.WPAPSK_2G4}}','{{.WPAPSK_2G5}}','{{.WPAPSK_2G6}}','{{.WPAPSK_2G7}}','{{.WPAPSK_2G8}}','{{.WPAPSK_2G9}}','{{.WPAPSK_2G10}}');
+        var pass5garray=new Array('{{.WPAPSK_5G1}}','{{.WPAPSK_5G2}}','{{.WPAPSK_5G3}}','{{.WPAPSK_5G4}}','{{.WPAPSK_5G5}}','{{.WPAPSK_5G6}}','{{.WPAPSK_5G7}}','{{.WPAPSK_5G8}}','{{.WPAPSK_5G9}}','{{.WPAPSK_5G10}}');
+        var id5garray=new Array('{{.SSID_5G1}}','{{.SSID_5G2}}','{{.SSID_5G3}}','{{.SSID_5G4}}','{{.SSID_5G4}}','{{.SSID_5G6}}','{{.SSID_5G7}}','{{.SSID_5G8}}','{{.SSID_5G9}}','{{.SSID_5G10}}');
+        var iparray=new Array('{{.Lan_ipaddr1}}','{{.Lan_ipaddr2}}','{{.Lan_ipaddr3}}','{{.Lan_ipaddr4}}','{{.Lan_ipaddr5}}','{{.Lan_ipaddr6}}','{{.Lan_ipaddr7}}','{{.Lan_ipaddr8}}','{{.Lan_ipaddr9}}','{{.Lan_ipaddr10}}');
+        console.log(gwarray+"ASDF!@#");
+    </script>
+    <h2 align="center">일괄 적용할 SSID, Password, GateWay를 입력해주세요</h2>
+    <div>SSID 1<input type="text" align ="center" id="changeid" value="{{.SSID_2G1}}"/><input type="button" onclick="idsubmit();"value="일괄 변경">SSID 2<input type="text" id="change5gid" value="{{.SSID_5G1}}"/><input type="button" onclick="id5gsubmit();"value="일괄 변경">
+        GateWay<input type="text" id="GateWay" value="{{.Lan_gateway}}"/><input type="button" onclick="gwsubmit();"value="일괄 변경"> <input type="button" align ="right" onclick="send_form();" value="저장하기"/></div>
+        Password<input type="text" id="Password" value="{{.WPAPSK_2G1}}"/><input type="button" onclick="passsubmit();"value="일괄 변경">
+        Password 2<input type="text" id="5gPassword" value="{{.WPAPSK_5G1}}"/><input type="button" onclick="pass5gsubmit();"value="일괄 변경">uM3.3 Server&nbsp&nbsp<input type ="text" id="curl" value="{{.CURL}}"/> </div>
+
+
+        <!--input type="button" onclick="submit();" value="적용"></input-->
+    <meta charset="UTF-8">
+</head>
+<body>
+<table border ="1" width="1380"  bgcolor="#000000" cellpadding="1" cellspacing="1">
+    <tr align="center" bgcolor="#fffffff">
+        <td width="50">No. </td>
+        <td width="200">MAC</td>
+        <td width="170">IP</td>
+        <td width="150">Location</td>
+        <td width="130">Version</td>
+        <td width="150"><strong>SSID 1</strong></td>
+        <td width="120"><strong>Password 1</strong></td>
+        <td width="150"><strong>SSID 2</strong></td>
+        <td width="120"><strong>Password 2</strong></td>
+        <td width="150"><strong>GateWay</strong></td>
+    </tr>
+</table> <!-- 여기서 f에다가 체킹된 박스의 수를 넣으면 된다 ex) f<length.check?? 이렇게-->
+<!--값을 받아오는 테이블은 여기서부터 시작한다.-->
+
+<script>
+
+    for(var f=0; f<table;f++){
+
+        document.write('<table border="1" width="1380" bgolor="white" cellpadding="1" cellspacing="1">');
+        document.write('<tr align="center" bgcolor="white">');
+        document.write('</tr>');
+        document.write('<td width="50" align ="center">');
+        document.write((f+1)+".");
+        document.write('</td>');
+        document.write('<td id="macAddressTag" width="200" align ="center">');
+        document.write(macarray[f]);
+        document.write('</td>');
+        document.write('<td id=IP width="170" align ="center">');
+        document.write(iparray[f]);
+        document.write('</td>');
+        document.write('<td id="Location" width="150" align ="center">');
+        document.write("Location");
+        document.write('</td>');
+        document.write('<td id="version" width="130" align ="center">');
+        document.write("Version");
+        document.write('</td>');
+        document.write('<td width="150" align="center">');
+        document.write('<input type="text" id="Lan_ssid_2GTag" style="text-align:center;width:100px" value="#######">');
+        document.write('</td>');
+        document.write('<td width="120"align="center">');
+        document.write('<input type="text" id="Lan_2G_pwTag" style="text-align:center;width:100px"value="#######">');
+        document.write('</td>');
+        document.write('<td width="150" align="center">');
+        document.write('<input type="text" id="Lan_ssid_5GTag" style="text-align:center;width:100px" value="Aircess_2G">');
+        document.write('</td>');
+        document.write('<td width="120"align="center">');
+        document.write('<input type="text" id="Lan_5G_pwTag" style="text-align:center;width:100px"value="12345678">');
+        document.write('</td>');
+        document.write('<td width="150"align="center">');
+        document.write('<input type="text" id="Lan_gwTag" style="text-align:center;width:100px"value="192.168.0.254">');
+        document.write('</td>');
+        document.write('</table>');
+        //위 테이블에다가 배열을 바로 넣게되면 모든 테이블 열의 id가 같아지게 된다. 그래서 나중에 데이터를 보낼 때 내 생각으로는 value값을 뽑기가 힘들것 같아서 아래와 같이 소스를 제작했다.
+        var Mac="macAddressTag"+(f);
+        document.getElementById("macAddressTag").id=Mac;
+        document.getElementById(Mac).value=(macarray[f]);
+        //console.log(document.getElementById(Mac).value+"########")
+        ////////////////////////////////////////////////////////////////
+        var SSID2g="Lan_ssid_2GTag"+(f);
+        var bc=document.getElementById("Lan_ssid_2GTag").id=SSID2g;
+        //console.log(bc) //for문이 table번돌아가니까 Lan_ssid_2GTag1 Lan_ssid_2GTag2 Lan_ssid_2GTag3 Lan_ssid_2GTag4 ... 라고 뜬다.
+        var multi=document.getElementById(SSID2g); //여기 SSID 안에 Lan_ssid_2GTag1~4가 순서대로 들어가서
+        multi.value=(id2garray[f]); //SSID id값도 1부터 4까지 바꾸고 ###### value값도 for문 f (1~4)까지 바꾸려 한다.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        var pass2g="Lan_2G_pwTag"+(f);
+        document.getElementById("Lan_2G_pwTag").id=pass2g;
+        document.getElementById(pass2g).value=(pass2garray[f]);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        var pass5g="Lan_5G_pwTag"+(f);
+        document.getElementById("Lan_5G_pwTag").id=pass5g;
+        document.getElementById(pass5g).value=(pass5garray[f]);
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        var SSID5g="Lan_ssid_5GTag"+(f);
+        document.getElementById("Lan_ssid_5GTag").id=SSID5g;
+        document.getElementById(SSID5g).value=(id5garray[f]);
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        var GW="Lan_gwTag"+(f);
+        document.getElementById("Lan_gwTag").id=GW;
+        document.getElementById(GW).value=(gwarray);
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        var VR="version"+(f);
+        document.getElementById("version").id=VR;
+        document.getElementById(VR).innerHTML="1.24";
+    }
+</script>
+
+<script>
+
+    var start=0;
+
+    function send_form() {
+        if(confirm("저장 하시겠습니까?")==true){
+        for (var f = 0; f < table; f++) {
+            var ma="macAddressTag" + (f);
+            var gwtag = "Lan_gwTag" + (f);
+            var ssidtag = "Lan_ssid_2GTag" + (f);
+            var pwtag = "Lan_2G_pwTag" + (f);
+            var ssid5gtag="Lan_ssid_5GTag"+(f);
+            var pw5gtag="Lan_5G_pwTag"+(f);
+            var curlserver=curl.value; //버튼누르면 컬 다바뀐다 컬만 바꾸게 나중에 한다
+            var Lan_gateway = document.getElementById(gwtag).value;
+            var SSID_2G = document.getElementById(ssidtag).value;
+            var WPAPSK_2G = document.getElementById(pwtag).value;
+            var SSID_5G = document.getElementById(ssid5gtag).value;
+            var WPAPSK_5G = document.getElementById(pw5gtag).value;
+            var macAddrs = document.getElementById(ma).value;
+            console.log(macAddrs);
+            console.log(SSID_2G);
+            console.log(WPAPSK_2G);
+            console.log(Lan_gateway);
+            console.log(curlserver);
+
+
+            var urlQueryStr = "&macAddr=" + macAddrs + "&Lan_gateway=" + Lan_gateway + "&SSID_2G=" + SSID_2G + "&WPAPSK_2G=" + WPAPSK_2G + "&SSID_5G=" + SSID_5G + "&WPAPSK_5G=" + WPAPSK_5G+"&Curlserver=" + curlserver;
+            console.log(urlQueryStr);
+            window.open("saveconfig?saveFlag=save" + urlQueryStr,macAddrs,"width=600,height=700,toolbar=no,resize=no,location=no,status=no,left=250,top=250,resizable=no");
+            console.log((f+1)+"개 전송");
+        }
+        alert("{{.CHECKED}}개 적용 완료")
+            window.close();
+
+    }
+    }
+
+</script>
+
+<script>
+    function idsubmit(){
+        aaa=document.getElementById("changeid").value;
+        console.log(aaa)
+        for(f=0;f<table;f++){
+            var SSID="Lan_ssid_2GTag"+(f);
+            var multissid=document.getElementById(SSID).value=aaa;
+
+        }
+    }
+
+
+    function id5gsubmit(){
+        bbb=document.getElementById("change5gid").value;
+        console.log(bbb)
+        for(f=0;f<table;f++){
+
+            var SSID5g="Lan_ssid_5GTag"+(f);
+            var multi5gssid=document.getElementById(SSID5g).value=bbb;
+            /////////////////////
+
+        }
+    }
+
+    function passsubmit(){
+        ccc=document.getElementById("Password").value;
+        console.log(ccc)
+        for(f=0;f<table;f++){
+
+            var Pass="Lan_2G_pwTag"+(f);
+            var multiPass=document.getElementById(Pass).value=ccc;
+            /////////////////////
+
+        }
+    }
+
+    function pass5gsubmit(){
+        ddd=document.getElementById("5gPassword").value;
+        console.log(ddd)
+        for(f=0;f<table;f++){
+
+            var Pass="Lan_5G_pwTag"+(f);
+            var multiPass=document.getElementById(Pass).value=ddd;
+            /////////////////////
+
+        }
+    }
+
+    function gwsubmit(){
+
+        eee=document.getElementById("GateWay").value;
+        console.log(eee)
+        for(f=0;f<table;f++){
+            var GateWay="Lan_gwTag"+(f);
+            var multiGateWay=document.getElementById(GateWay).value=eee;
+        }
+    }
+    function curlsubmit(){
+        fff=document.getElementById("curl").value;
+    }
+</script>
+</body>
+</html>

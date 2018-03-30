@@ -1,0 +1,853 @@
+﻿<!DOCTYPE html>
+<html lang="ko">  <!-- en 이였음 -->
+
+<!-- 헤더에는 로컬 디스크에서 스타일쉬트 가져오는걸로 끝난다 -->
+<head>
+    <script src="../production/serveraddr.js"></script>
+    <script>
+        //alert(server_url)
+        var ws = new WebSocket("ws://"+server_url+":8100/websocket");
+        var indexmacaddr;
+        var table;
+        array1=indexmacaddr.split(';');
+        array1.pop();
+        var table1=array1.pop();
+        table=table1.substr(6);
+        console.log(table);
+        console.log(array1);
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 캐쉬 안쌓이게 해보자.... -->
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <META http-equiv="Expires" content="-1">
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="No-Cache">
+    <!-- 파비콘을 설정한다. png 를 ico로 변환하는 과정이 필요 -->
+    <link rel="shortcut icon" href="./jmpsys_wifi.ico" >
+    <title>uManager 3.3</title>
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 링크 엘리먼트는 웹url이 지정하는 파일을 스타일쉬트와 연결시켜준다
+    즉 CSS 내용을 축적하여 만들어 나가기 위한 것이지 자바스크립트와는 관계가 없다. -->
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- bootstrap-progressbar -->
+    <link href="../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.min.css" rel="stylesheet">
+
+    <style>
+        table.dataTable.select tbody tr,
+        table.dataTable thead th:first-child {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body class="nav-md">
+
+<!-- 숨겨진 레이어 -->
+
+<!-- 숨겨진 레이어 -->
+
+
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="index.html" class="site_title"><i class="fa fa-wifi"></i> <span>제이엠피시스템</span></a>
+                </div>
+
+                <div class="clearfix"></div>
+                <!-- menu profile quick info -->
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img src="images/jsn270.png" alt="..." class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>환영합니다,</span>
+                        <h2>관리자님</h2>
+                    </div>
+                </div>
+                <!-- /menu profile quick info -->
+
+                <br />
+
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <h3>JMPSYSTEMS uManager 3.3</h3>
+                        <ul class="nav side-menu">
+                            <li><a><i class="fa fa-area-chart"></i> 기본관리 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href='index.html'>AP 관리</a></li>
+                                    <li><a href='index1.html'>단말 관리</a></li>
+                                    <!--li><a href='index2.html'>AP 관계도</a></li-->
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-archive"></i> 추가관리 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href='indoor.html'>실내 구성도</a></li>
+                                    <li><a onclick="mapinfo()">실외 구성도</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu_section">
+                        <h3>개발예정 메뉴</h3>
+                        <ul class="nav side-menu">
+                            <li><a><i class="fa fa-bug"></i> 버그신고 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a target="_blank" href="http://www.jmpsys.com">개발자에게 알리기</a></li>
+                                    <li><a href='#Redirect'>프로젝트 블로그</a></li>
+                                </ul>
+                            </li>
+                            <li><a target="_blank" href="http://www.jmpsys.com"><i class="fa fa-laptop"></i> Go JMP Site <span class="label label-success pull-right">JMPSYS</span></a></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+                <div class="sidebar-footer hidden-small">
+                    <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Logout">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a>
+                </div>
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <img src="images/jsn270.png" alt="">무선 관리자
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="javascript:;"> Profile</a></li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="badge bg-red pull-right">50%</span>
+                                        <span>Settings</span>
+                                    </a>
+                                </li>
+                                <li><a href="javascript:;">Help</a></li>
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+
+                        <!--  우상단 관리자 아이콘 풀다운 메뉴 꾸미기...
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">6</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="text-center">
+                                        <a>
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">  <!-- 오른쪽 전체를 지칭 -->
+            <!-- 여기까진 모든 젠텔레라 페이지가 똑같다...-->
+
+            <!-- top tiles -->
+            <div class="row tile_count"> <!-- 최상단 카운터들 -->
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Download</span>
+                    <div class="count" id="A00">0</div>  <!-- A00 에 값 대입 -->
+                    <!--span><i class="fa fa-user"></i> Total Download Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Upload</span>
+                    <div class="count"  id="A01">0</div>
+                    <!--i class="fa fa-clock-o"></i> <span>Total Upload Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Trafic</span>
+                    <div class="count green" id="A02" >0</div>
+                    <!--i class="fa fa-user"></i> <span>Real Time Trafic</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-clock-o"></i> Service Time</span>
+                    <div class="count" style="font-size:30px" id = "A03" >0</div>
+                    <!--i class="fa fa-clock-o"></i><span> Operation Time</span-->
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Operating Rate</span>
+                    <div class="count" id= "A04">0</div>
+                    <i id="A04rate" class="green">34%</i>
+                </div>
+                <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top"><i class="fa fa-user"></i> Registration Equipment</span>
+                    <div class="count" id= "A05"></div>
+                    <!--i class="fa fa-user"></i> <span>Registration Equipment</span-->
+                </div>
+
+            </div>    <!-- 우측공간 최상단 카운터들 -->
+            <!-- /top tiles -->
+            <hr/>    <!-- 우측공간 최상단 카운터들 -->
+            <!-- /top tiles -->
+            <div class="clearfix"></div>
+
+            <!-- 블럭을 shrink 한줄만 copy 해오면 되네.. 블럭을 인식하는건 역시 this is webstorm !!
+            <div class="">  <!-- 우측공간 최상단 카운터 아래쪽 공간 정의 -->
+
+            <div class="page-title">
+                <div class="title_left">
+                    <!-- 파파 아이콘 사용 -->
+                    <h3><i class="fa fa-cogs" aria-hidden="true"></i> 무선 운영 관리 <small> wireless AP list for management </small></i></h3>
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" onclick="top_go_button_click();">Go!</button>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- 테이블 감싸고 제품과 오른쪽 더비 써치 & Go -->
+
+            <div class="clearfix"></div>
+
+            <div class="row"> <!-- 우측 공간에서 row 하나 만든다. -->
+                <!-- xs < 768 | sm > 768 | md > 992 | lg > 1200
+<div id="show_file" class="col-md-6"
+ 부트스트랩 정의 ::  컨테이너 너비   auto   |   750px  |   970px  |   1170px -->
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel" style="align:center; height:800px">
+                        <div class="x_title">
+                            <h2>무선 장비 관리<small>WiFi AP list for managemnet</small></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content" style="align:center;">
+                            <table style="align:center;">
+                                    <iframe style="background-color:gray;min-width:100%;min-height:700px"src="iframe_mesh.html"></iframe>
+                               </table>
+                        </div>
+                    </div>
+                </div> <!-- 체빡 영역 -->
+
+
+
+
+            </div> <!-- 우측 공간에서 row 하나 만든다. --> <!-- 반응형 체크때문에 남겨둔 코드 -->
+
+        </div>  <!-- 오른쪽 전체 끝 -->
+
+    </div>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+        <div class="pull-right">
+            uManager version 3.3 ----- <a href="http://www.jmpsys.com">JMPSYSTEMS Co., Ltd.</a>
+        </div>
+        <div class="clearfix"></div>
+
+    </footer>
+    <!-- /footer content -->
+
+</div>
+<!-- container body -->
+
+
+<script>
+    function top_go_button_click() {
+        window.open("https://www.google.co.kr","_blank");
+    }
+</script>
+
+<!-- CSS는 헤더에서 젤 먼저 로딩하고 바디에 해당하는 내용들 로딩되고 나서 마지막에 js 스크립트 실행 되는게 순서임...
+여기서 죄다 실행시킨다.. 앞으로 옮기면 바디로딩되기 전에 실행되므로 죄다 document.ready 에 우겨 넣어야 하는 불편함이 있다-->
+<!-- jQuery -->
+<script src="../vendors/jquery/dist/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<!-- 자바스트립트를 코딩하는 대신 파일을 지정하여 물고와서 수행해 버린다.
+당연 CSS와는 무관하니 부트스트랩이라는 말때문에 헷갈리지 말길... -->
+<script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="../vendors/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="../vendors/nprogress/nprogress.js"></script>
+<!-- Chart.js -->
+<script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- iCheck -->
+<script src="../vendors/iCheck/icheck.min.js"></script>
+<!-- Datatables -->
+<script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="../vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
+<script src="../vendors/jszip/dist/jszip.min.js"></script>
+<!-- 이거 동작 수상하다.. 일단 짜름.. pdf 만드는거 같은데.. 가끔식 권한 물어봄
+<script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
+<!-- -->
+
+<!-- DateJS -->
+<script src="../vendors/DateJS/build/date.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="../build/js/custom.min.js"></script>
+<!-- d3.js -->
+<script src="../vendors/d3/d3.min.js"></script>
+<!-- 웹소켓 -->
+<!-- /웹소켓 -->
+
+<script>
+    for(var f=0;f<table;f++) {
+        document.write('<hidden id = "first"  class="base"></hidden>')
+        var rec = "first"+(f);
+        document.getElementById("first").id = rec;
+        var a= document.getElementById(rec)
+        document.getElementById("A05").innerHTML=table;
+        if(array1[f]==null){
+            document.getElementById(rec).className="Loading";
+        }
+    }
+
+</script>
+
+<script>
+    /*
+    function ws_close(){
+        ws.close();
+    }
+    var checkUnload = true;
+    $(window).on("beforeunload", function(){
+        if(checkUnload) return ws_close();
+    });
+    */
+    //var stat0=new Array();
+    //stat0,stat2.......  총 40개의 배열 생성 여기다가 상태넣을거.
+    for(var s=0;s<table;s++){
+        eval("stat"+s+"=new Array();");
+        eval("test_compare"+s+"=new Array();");
+    }
+    var string='';
+    var bootstring=new Array();
+    var macstring=new Array();
+    var ipstring=new Array();
+    var comparetime=new Array();
+    var statusstring=new Array();
+    var savetime=new Array();
+    var savetime2=new Array();
+    var savetime1=new Array();
+    var uploadstring=new Array();
+    var downstring=new Array();
+    var spend_time;
+    var upload=new Array();
+    var download=new Array();
+    var per_minute = new Array();
+    var per_minute1 = new Array();
+    var websocsend=new Array();
+    var uptotal;
+    var downtotal;
+
+    var ws = new WebSocket("ws://"+server_url+":8100/websocket");
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //this.scrollTop = this.scrollHeight
+
+    window.onload = function()
+    {
+
+        // Web Socket is connected, send data using send()
+        setTimeout(function(){ws.send("piping");}, 100);
+
+        //var myTextArea = document.getElementById("textarea1");
+        // myTextArea.value = myTextArea.value + "\n" + "First message sent";
+        //textarea1.scrollTop = textarea1.scrollHeight;
+    };
+    ws.onmessage = function (evt)
+    {
+        //console.log(evt.data);
+        spend_time_start=evt.data.lastIndexOf(';');
+        spend_time=evt.data.substr(spend_time_start+2);
+        string = evt.data.split(';');
+        //바로가면 안되고 특정문자 기준으로 배열로 나눠서 뿌려준다.
+        setTimeout(function(){ws.send("piping");}, 100);
+        if (string!=""&&evt.data.indexOf("table:")==-1) {
+            web_soc_html();
+        }
+    }
+
+
+    function web_soc_html(){
+        //console.log(spend_time);//서버 열린 시간(초)
+        var clocks=Math.floor(spend_time%60);
+        var minutes=Math.floor(spend_time/60);
+        var hours=Math.floor(minutes/60);
+        var day=Math.floor(hours/24);
+        /*if(minutes%120==0){ //2시간마다 한번씩 새로고침
+         setTimeout(function() {
+         window.location.reload(true);
+
+         },1000*60*2)
+         }*/
+        var string_time=minutes+"분";
+        if (minutes>59){
+            minutes=minutes%60;
+            string_time=hours+"시간 "+minutes+"분";
+            if(hours>23)
+            {
+                hours=hours%24;
+                string_time=day+"일 "+hours+"시간 "+minutes+"분";
+            }
+
+        }
+        //console.log(string_time)
+        document.getElementById("A03").innerHTML=string_time;
+        document.getElementById("A03").title=clocks+"초";
+        string.splice(string.length - 1, 1);
+        var getstringlength=string.length
+        for(j=1;j<getstringlength;j++) {
+            string[j] = string[j].substr(1);
+        }
+        //console.log(string); //맥과 부트가 붙어있는 스트링
+        for(i=0;i<getstringlength;i++) {
+            var bootstart=string[i].indexOf("부:");
+            bootstring[i] = string[i].substr(bootstart+2, 1);
+            //console.log(bootstring);
+            var macstart=string[i].indexOf("맥:");
+            macstring[i]=string[i].substr(macstart+2,17);
+            //console.log(macstring);
+            var ipstart=string[i].indexOf("아:");
+            var ipend=string[i].lastIndexOf("컴:");
+            ipstring[i]=string[i].substr(ipstart+2,ipend-ipstart-3);
+            //console.log(ipstring);
+            var compstart=string[i].indexOf("컴");
+            var compend=string[i].lastIndexOf("상태:");
+            comparetime[i]=string[i].substr(compstart+2,compend-compstart-3);
+            //console.log(comparetime);
+            statusstring[i]=string[i].substr(compend+3); //ap트래픽
+            var upstart=string[i].indexOf("전송:");
+            var upend=string[i].indexOf("수신:");
+            uploadstring[i]=string[i].substr(upstart+4,upend-upstart-6);//사용자가 다운로드
+            var downstart=string[i].indexOf("수신:");
+            var downend=string[i].indexOf("모델:");
+            downstring[i]=string[i].substr(downstart+4,downend-downstart-6);//사용자가 업로드
+            //console.log(downstring);
+            //console.log(statusstring)
+        }
+        //var nend = new Date().getTime();
+        //var spendtime=(nend-nStart)/1000;
+        //console.log(spendtime);
+        //alert(macstring.indexOf(array1[0])) //그 맥에해당하는 위치를 알려준다.
+        for(i=0;i<getstringlength;i++){
+            // console.log(inputhere);
+            for(j=0;j<table;j++){
+                if(macstring[i]==array1[j]){
+                    upload[j]=uploadstring[i];
+                    download[j]=downstring[i];
+                    //alert(i); 소켓에서 오는 배열 번호
+                    //alert(j); 그에 일치하는 화면 배열 번호
+                    savetime[j]=comparetime[i];
+                    eval("var pus=stat"+j)
+                    pus.unshift("\n"+statusstring[i]);
+                    if(pus.length>10){
+                        pus.pop();
+                    }
+
+                    if(bootstring[i]=="0"){
+
+                        document.getElementById('first'+(j)).className="flag0";
+                        document.getElementById("first"+(j)).title=pus;
+                        // alert("색바뀐당");
+                    }
+                    else if(bootstring[i]=="1"){
+                        document.getElementById('first'+(j)).className="flag1";
+                        document.getElementById('first'+(j)).title="플래그1";
+                    }
+                    else if(bootstring[i]=="2"){
+                        document.getElementById('first'+(j)).className="flag2";
+                        document.getElementById('first'+(j)).title="플래그2";
+                    }
+                    else if(bootstring[i]=="3"){
+                        document.getElementById('first'+(j)).className="flag3";
+                        document.getElementById('first'+(j)).title="플래그3";
+                    }
+                    else if(bootstring[i]=="4"){
+                        document.getElementById('first'+(j)).className="flag4";
+                        document.getElementById('first'+(j)).title="플래그4";
+                    }
+                }
+            }
+            uptotal=0;
+            downtotal=0;
+            for(j=0;j<table;j++){
+                if(upload[j]!=null) {
+                    uptotal += Number(upload[j]);
+                    downtotal+=Number(download[j]);
+                }
+            }
+        } //화면과 같은 맥과 부트 배열 위치 찾기
+
+        var cutup=String(uptotal);
+        var cutdown=String(downtotal);
+        var cutup1=uptotal;
+        var cutdown1=downtotal;
+        if (cutup1>1023){
+            cutup1=(cutup/1024).toFixed(1)
+            cutup=cutup1+"K"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1)
+            cutup=cutup1+"M"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1)
+            cutup=cutup1+"G"
+        }if (cutup1>1023){
+            cutup1=(cutup1/1024).toFixed(1)
+            cutup=cutup1+"T"
+        }
+        if (cutdown1>1023){
+            cutdown1=(cutdown/1024).toFixed(1)
+            cutdown=cutdown1+"K"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1)
+            cutdown=cutdown1+"M"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1)
+            cutdown=cutdown1+"G"
+        }if (cutdown1>1023){
+            cutdown1=(cutdown1/1024).toFixed(1)
+            cutdown=cutdown1+"T"
+        }
+        /* if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"K"
+         cutup=cutup.substring(0,cutup.length-3)
+         console.log(cutup)
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"M"
+         cutup=cutup.substring(0,cutup.length-4);
+         console.log(cutup1)
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"G"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutup.length>4){
+         cutup1=(cutup/1024).toFixed(1)+"T"
+         cutup=cutup.substring(0,cutup.length-4);
+         }if(cutdown.length>4){
+         cutdown=cutdown.substring(0,cutdown.length-3)+"K";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"M";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"G";
+         }if(cutdown.length>5){
+         cutdown=cutdown.substring(0,cutdown.length-4)+"T";
+         }*/
+        //부트플래그 넣어보자
+        var err=$('.flag5').length;
+        var notyet=$('.base').length;
+        var und=$('.Loading').length;
+        var oprate=Math.floor((table-err-notyet-und)*100/(table-und));
+        document.getElementById("A04rate").innerHTML=oprate+"%";
+        document.getElementById("A00").innerHTML=cutup;
+        document.getElementById("A00").title=AddComma(String(uptotal))+"byte";
+        document.getElementById("A01").innerHTML=cutdown;
+        document.getElementById("A01").title=AddComma(String(downtotal))+"byte";
+        var work=table-err-notyet-und.toString();
+        var total=table-und.toString();
+        document.getElementById("A04").innerHTML=work+" / "+total;
+    }
+    function AddComma(data_value) {
+        return Number(data_value).toLocaleString('en');
+    }
+    setInterval(function() {
+        if (uptotal != null) {
+            per_minute.unshift(uptotal+downtotal);
+            if (per_minute.length > 15) {
+                per_minute.pop();
+            }
+            //console.log(per_minute)
+            per_minute1.unshift(downtotal);
+            if (per_minute1.length > 15) {
+                per_minute1.pop();
+            }
+            //console.log(per_minute1);
+
+            if (per_minute.length > 10) {
+                var minute = (per_minute[0] - per_minute[9])/10;
+                minute=Math.ceil(minute);
+                minute1=minute+"B";
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"K";
+                }
+                if(minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"M";
+                }
+                if (minute>1024){
+                    minute=(minute/1023).toFixed(1);
+                    minute1=minute+"G"
+                }
+                document.getElementById("A02").innerHTML = minute1;
+                document.getElementById("A02").style="cursor:default";
+                //console.log(per_minute, minute);
+            }
+            else {
+                document.getElementById("A02").innerHTML = "Loading...";
+                document.getElementById("A02").style="cursor:wait";
+            }
+        }
+    },1000);
+
+
+    setTimeout(function(){
+        setInterval(function(){
+            for(i=0;i<table;i++) {
+                eval("var pus=test_compare"+i)
+                pus.push(savetime[i]);
+                start_pus=pus.indexOf();
+                last_pus=pus.lastIndexOf(!null);
+                // console.log(pus,start_pus,last_pus,i);
+                if(pus[0]==pus[1]){
+                    if(document.getElementById('first'+(i)).className!="Loading") {
+                        document.getElementById('first' + (i)).className = "flag5";
+                        document.getElementById('first'+(i)).title="No response From Ap";
+                        websocsend.push(" "+array1[i]);
+                        //var asdfeg=array1[i];
+                        //ws.send(asdfeg)
+                        console.log(websocsend);
+
+                    }
+                }
+
+                if(pus.length>2){
+                    pus.shift();
+                }
+            }
+            send_soc();
+        },1000*60*5); //5분
+
+    },30000);
+
+    function send_soc(){
+        setTimeout(function(){ws.send("errmac "+websocsend);}, 100);
+        setTimeout(function(){ websocsend=new Array();}, 1000*10);
+    }
+
+    showopen=window.open("http://" + server_url + ":8080/shownode?show=1","nodeok","menubar=0 width=1, height=1");
+    setInterval(function() {
+        showopen.close();
+    },1000);
+
+
+    /* 장비가 죽었는지 확인하는 방법 1)
+     setInterval(function(){
+     for(i=0;i<table;i++)
+     savetime1[i]=savetime[i];
+     console.log(savetime1,"CCCCC"); //N초마다 savetime1에 저장.
+     setTimeout(function() {
+     for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     if(document.getElementById('first'+(i)).className!="Loading") {
+     document.getElementById('first' + (i)).className = "flag5";
+     }
+     }
+     }
+     console.log(savetime1,"AAAAAAAA");
+     console.log(savetime,"BBBBBBBB");
+     }, 1000*60*2);
+     },1000*60*10);
+
+     */
+
+
+    /*for(i=0;i<table;i++){
+     if(savetime1[i]===savetime[i]){
+     document.getElementById('first'+(i)).className="flag5";
+     }
+     }
+     console.log(savetime1);
+     console.log(savetime);*/
+
+
+
+</script>
+<!-- 테이블에 마우스 클릭시 값 갱신 -->
+<script>
+    // 자바스크립트에서 배열이란 문자열 이름과 짝을 이루는 임의의 값들. 배열 길이는 하나 더 큰 값 가짐.
+    // 이전 스크립트에서 선언한 변수와 함수는 글로벌이므로 여기서 사용가능
+    // 스크립트 엘리먼트 단위 순서대로 실행되며,
+    // 단위 스크립트 엘리먼트 내에서는 함수선언을 먼저시행하고 함수밖의 문장을 순서대로 실행
+    // 함수를 선언한것이 아니라 함수 선언하는 방법으로 객체를 선언한 것 : var plus = function(a,b) { return a+ b; };
+
+    /* 타일 스타일, 마우스오버, 실시간 표출 재구현 예쩡...
+     function live_update() {   // 당장은 불릴 일이 없다
+     <!-- 마우스 포인터 위치에 레이어 띄우기 -->
+     <!-- 마우스 포인터 위치에 레이어 띄우기 -->
+
+
+     $("#2").mouseenter(function(){
+     $(document).mousemove(function(e){
+     $('#mouse_posi').html( e.pageY + ":" + e.pageY)
+     });
+
+     });
+     $("#2").mouseleave(function(){
+     setTimeout(function(){
+     $('#mouse_posi').html("");
+     }, 2000);
+     });
+     $("#1").mouseenter(function(){
+     jQuery.get("../json_data/my_data.json", function(data) {
+     //process text file line by line
+     $('#show_file').html(data.replace('n',''));
+     });
+     });
+     $("#1").mouseleave(function(){
+
+     setTimeout(function(){
+     $('#show_file').html("");
+     }, 1000);
+     });
+
+
+     var table = $('#table333').DataTable()
+     $('#table333 tbody').on( 'click', 'td', function () {
+     var cell = table.cell( this );
+     cell.data( "its---me" ).draw();    // 쓰는 순간 소팅 걸려서 테이블이 변화한다.. 별로 보기 않좋음..
+     // 이것은 모든 JS와 무관하게 순전히 HTML5 DOM 모델에 따라 <td> 의 위치가 나오는 것임 !!
+     // alert('My position in table is: '+this.cellIndex+'x'+this.parentNode.rowIndex);
+     var x_index = this.cellIndex;
+     var y_index = this.parentNode.rowIndex;
+     // 셀 지정할때 row 가 먼저다...즉, y 축이 먼저다..
+     // 소팅걸려 있으면 찍은 위치가 아니라, 소팅되어 변경된 테이블 위치를 가르킨다
+     console.log(x_index, y_index)
+     } );
+     }
+
+     */
+    function mapinfo(){
+        showopen=window.open("http://" + server_url + ":8080/maploc","nodeok","menubar=0 width=1, height=1");
+        setInterval(function() {
+            showopen.close();
+            location.href="mapmak.html";
+        },1000);
+    }
+</script>
+<!-- /테이블에 마우스 클릭시 값 갱신 -->
+
+</body>
+
+</html>

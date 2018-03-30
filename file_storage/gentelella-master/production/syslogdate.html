@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+    <meta charset="UTF-8">
+    <style>
+        div.blackback{background-color: black; color: white;text-align:center}
+    </style>
+
+    <title>Title</title>
+</head>
+<body>
+
+<div class="blackback"><h2>Syslog data {{.MacAddr}}</h2> </div>
+<input type="text" id="testDatepicker"style = "text-align:center; width:39%;"title="시작 날짜">
+<input type="text" id="testDatepicker1"style = "text-align:center;width:39%;" title="종료 날짜">
+<button style="width:19%"onclick="onc();">확인</button>
+<p>
+    <textarea id="syslogdata" wrap=OFF readonly=true style="margin: auto;overflow:scroll;width:100%;height:500px;">{{.ReadDefaultFile}}</textarea>
+    <textarea id="syslogdata1"  wrap=OFF readonly=true style="display:none">{{.ReadDefaultFile}}</textarea>
+</p>
+</body>
+<script>
+    $("#testDatepicker currentText").click(function(){
+       console.log("11")
+    })
+
+    $(function() {
+        $( "#testDatepicker" ).datepicker({
+            dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'],
+            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            closeText: '닫기',
+            dateFormat: "yy-mm-dd",
+            yearRange:"-1",
+            maxDate: "+0D"
+        });
+    });
+    $(function() {
+        $( "#testDatepicker1" ).datepicker({
+            dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'],
+            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            closeText: '닫기',
+            dateFormat: "yy-mm-dd",
+            yearRange:"-1",
+            currentText: '오늘 날짜',
+            monthRange:"-2",
+            maxDate: "+0D"
+        });
+    });
+    function onc(){
+        abc="{{.MacAddr}}"
+        var montharray=new Array();
+        //theBigDay.getDay(),
+        aa=document.getElementById("testDatepicker").value;
+        bb=document.getElementById("testDatepicker1").value;
+
+        var arr3=aa.split('-')
+        var arr1=aa.split('-');
+        var arr2=bb.split('-');
+
+        var theBigDay1 = new Date(arr1[0], arr1[1], arr1[2]);
+        var theBigDay = new Date(arr1[0], arr1[1]-1, arr1[2]); // 1962-07-07
+        var theSmallDay=new Date(arr2[0],arr2[1]-1,arr2[2]);
+        var endDayOfmonth = new Date(arr1[0], arr1[1],0);
+        //console.log(endDayOfmonth.getDate())
+
+        var between=(theSmallDay.getTime()-theBigDay.getTime())/1000/60/60/24;
+        //console.log(arr1[0],arr1[1],arr1[2])
+
+        for (i=0;i<between+1;i++){
+            if(theBigDay1.getMonth()<theBigDay.getMonth()+1){
+              //  console.log(theBigDay1.getMonth(),theBigDay.getMonth()+1)
+                theBigDay.setDate(Number(arr1[2])+i-endDayOfmonth.getDate());
+            }else{
+               theBigDay.setDate(Number(arr1[2])+i);
+            }
+            //
+           // console.log(theBigDay.getMonth()+1,theBigDay.getDate())
+            month=theBigDay.getMonth()+1;
+            date=theBigDay.getDate();
+            if(month<10){
+                month="0"+month
+            }
+            if(date<10){
+                date="0"+date
+            }
+            console.log(month,date)
+            montharray[i]="[2017-"+month+"-"+date;
+        }
+        console.log(montharray);
+        //document.getElementById("syslogdata").innerHTML="1111111111111\n11111"
+        aaa=aa.replace(/-/gi,"");
+        bbb=bb.replace(/-/gi,"");
+        if((Number(aaa)>Number(bbb))||(arr2[1]-arr1[1])>1){
+           alert("날짜를 확인해주세요. \n설정 가능 범위는 한달입니다.");
+        }else{
+            var resultString=""
+            //console.log(endd.setDate(10))
+            //console.log(between)
+            abc=document.getElementById("syslogdata1").innerHTML;
+            //console.log(abc)
+            var lines = abc.split("\n");
+            console.log(lines)
+
+            for (var i = 0; i < lines.length; i++) {
+                for(var j=0;j<between+1;j++){
+                    if(lines[i].indexOf(montharray[j])!=-1){
+                        resultString += lines[i]+"\n";
+                    }
+                }
+
+            }
+            document.getElementById("syslogdata").innerHTML=resultString;
+
+
+
+
+            /*
+                var myDate=new Date(aa)
+                var dayOfMonth = myDate.getDate();
+                myDate.setDate(dayOfMonth - 1);
+              //  console.log(myDate)
+                whereisstart=abc.indexOf(aa);
+               // console.log(aa)
+               // console.log(bb)
+                whereisend=abc.lastIndexOf(bb);
+            //console.log(whereisend)
+            abc1=abc.substring(whereisend-1,whereisend+300);
+           // console.log(asdf[0],asdf[1])
+                var stringss=abc.substring(whereisstart,whereisend);
+                if (whereisend==-1){
+                    var stringss=abc.substring(whereisstart)
+                }
+                //console.log(stringss)
+                //console.log(whereisstart)
+                document.getElementById("syslogdata").innerHTML=stringss
+                //console.log(abc,aa,bb)
+*/
+            }
+    }
+</script>
+</html>
