@@ -6654,7 +6654,7 @@ func pingfunc(){
 	}
 }
 func pinginfo(mac string){
-	//fmt.Println("192.168.0."+strconv.Itoa(a))
+	fmt.Println("192.168.0."+strconv.Itoa(1))
 	mutex.Lock()
 	pingresult[mac]=false
 	mutex.Unlock()
